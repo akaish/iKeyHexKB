@@ -3,6 +3,10 @@ iKey Android Hex KB is little library that provides easy to implement hexademica
 
 See demo application for examle code snippets.
 
+![Demo](https://raw.githubusercontent.com/akaish/iKeyHexKB/master/ihkb_demo.gif)
+
+iKey Android Hex KB used in:
+* [https://play.google.com/store/apps/details?id=ru.ikey.express](https://play.google.com/store/apps/details?id=ru.ikey.express)
 
 Copyright (c) 2019 iKey (ikey.ru)
 Author: Denis Bogomolov (akaish)
