@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 android {
     compileSdkVersion 28
@@ -39,4 +41,93 @@ dependencies {
     implementation "androidx.annotation:annotation:1.0.0-beta01"
     implementation 'com.google.android.material:material:1.0.0-beta01'
 
+}
+
+group = "net.akaish.ikey.hkb"
+archivesBaseName = "ikey-hkb"
+version = "0.4"
+
+task deleteJar(type: Delete) {
+    delete 'libs/jars/'+archivesBaseName+'.'+version+'.jar'
+}
+
+task createJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('libs/jars/')
+    include('classes.jar')
+    rename('classes.jar', archivesBaseName+'.'+version+'.jar')
+}
+
+createJar.dependsOn(deleteJar, build)
+
+// Signing
+apply plugin: 'signing'
+signing {
+    sign configurations.archives
+}
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "source"
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+//Creating sources with comments
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+artifacts {
+    archives javadocJar
+    archives androidSourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name "iKeyHexKB"
+                packaging 'jar'
+                description 'iKeyHexKB - soft hexademical keyboard for Android'
+                artifactId "ikey-hkb"
+                url 'https://github.com/akaish/iKeyHexKB'
+                scm {
+                    connection 'scm:git:git://github.com/akaish/iKeyHexKB.git'
+                    developerConnection 'scm:git:ssh://github.com/akaish/iKeyHexKB.git'
+                    url 'https://github.com/akaish/iKeyHexKB/tree/master'
+                }
+                licenses {
+                    license {
+                        name 'Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'akaish'
+                        name 'Denis Bogomolov'
+                        email 'akaish@mail.ru'
+                    }
+                    developer {
+                        id 'ikey-ru'
+                        name 'Pavel'
+                        email 'info@ikey.ru'
+                    }
+                }
+            }
+        }
+    }
 }
