@@ -3,6 +3,13 @@ iKey Android Hex KB is a little library that provides easy to implement hexademi
 
 See demo application for example code snippets.
 
+### Gradle decency
+```Java
+dependencies {
+    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.4'
+}
+```
+
 ![Demo](https://raw.githubusercontent.com/akaish/iKeyHexKB/master/ihkb_demo.gif)
 
 iKey Android Hex KB used in:
