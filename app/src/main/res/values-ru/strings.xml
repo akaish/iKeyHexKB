@@ -1,0 +1,39 @@
+<resources>
+    <!--
+    ~ Copyright (c) 2019 iKey (ikey.ru)
+    ~ Author: Denis Bogomolov (akaish)
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~ http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+    ~
+    ~ This file is a part of Android Hex Keyboard, more info at
+    ~ https://ikey.ru
+    -->
+    <string name="app_name">iKey Hex KB Demo v0.4</string>
+
+    <string name="about_app_text">Демка библиотеки iKey Hex KB v0.4.\nДанная демка, как и iKey Hex KB, лицензирована Apache v.2 License. Копирайт (c) 2019 ikey.ru, автор Денис Богомолов (akaish), подробнее: {0}</string>
+    <string name="about_app_link_text">some_github_url_todo</string>
+    <string name="about_app_link">https://ikey.ru</string>
+
+    <string name="example_1_label">(1) Поле ввода с HKB:</string>
+    <string name="example_1_hint">Произвольный шестнадцатеричный код</string>
+    <string name="example_1_init">AA08B7CC22</string>
+
+    <string name="example_2_label">(2) Поле ввода с HKB, особый шрифт и декорации:</string>
+    <string name="example_2_hint">Произвольный шестнадцатеричный код</string>
+    <string name="example_2_init">42FF202B29</string>
+
+    <string name="example_3_label">(3) Поле ввода с HKB, проверка CRC, маски Red Mad Robot, особый шрифт и декорации:</string>
+    <string name="example_3_hint">Код dallas (используется в ключах iButton)</string>
+    <string name="example_3_crc">Проверка CRC</string>
+    <string name="example_3_init">1234</string>
+</resources>
