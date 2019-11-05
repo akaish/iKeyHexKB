@@ -21,8 +21,8 @@
     <string name="app_name">iKey Hex KB Demo v0.4</string>
 
     <string name="about_app_text">Демка библиотеки iKey Hex KB v0.4.\nДанная демка, как и iKey Hex KB, лицензирована Apache v.2 License. Копирайт (c) 2019 ikey.ru, автор Денис Богомолов (akaish), подробнее: {0}</string>
-    <string name="about_app_link_text">some_github_url_todo</string>
-    <string name="about_app_link">https://ikey.ru</string>
+    <string name="about_app_link_text">iKeyHexKB project page.</string>
+    <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
     <string name="example_1_label">(1) Поле ввода с HKB:</string>
     <string name="example_1_hint">Произвольный шестнадцатеричный код</string>

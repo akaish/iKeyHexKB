@@ -22,8 +22,8 @@
     <string name="app_name">iKey Hex KB Demo v0.4</string>
 
     <string name="about_app_text">This this Demo application for iKey Hex KB v0.4.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright (c) 2019 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
-    <string name="about_app_link_text">some_github_url_todo</string>
-    <string name="about_app_link">https://ikey.ru</string>
+    <string name="about_app_link_text">iKeyHexKB project page.</string>
+    <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
     <string name="example_1_label">(1) Edit text with attached HKB:</string>
     <string name="example_1_hint">Arbitrary hex string</string>
