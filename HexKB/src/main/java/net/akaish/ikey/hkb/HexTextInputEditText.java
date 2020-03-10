@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 iKey (ikey.ru)
+ *  Copyright (c) 2019-2020 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,7 +78,7 @@ public class HexTextInputEditText extends TextInputEditText {
         String path = null;
         for (int i = 0; i < n; ++i) {
             int attrId = a.getIndex(i);
-            if(attrId == R.styleable.HexTextInputEditText_assetsFont) {
+            if(attrId == R.styleable.HexTextInputEditText_assetsFontOld) {
                 path = a.getString(attrId);
             }
         }

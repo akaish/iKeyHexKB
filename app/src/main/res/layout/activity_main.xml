@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019 iKey (ikey.ru)
+  ~ Copyright (c) 2019-2020 iKey (ikey.ru)
   ~ Author: Denis Bogomolov (akaish)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,6 +41,8 @@
                 android:layout_margin="6dp"
                 android:textStyle="bold" />
 
+            <!-- (1) FixedHex (insert behaviour, fill mode = false): -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +50,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="6dp"
                 android:text="@string/example_1_label"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -72,20 +73,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <net.akaish.ikey.hkb.HexTextInputEditText
-                        android:id="@+id/simple_text"
+                    <net.akaish.ikey.hkb.FixedHexInputEditText
+                        android:id="@+id/simple_1_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="1234567890ABCDE "
-                        android:hint="@string/example_1_hint"
+                        android:hint="@string/example_1_4_hint"
                         android:inputType="textNoSuggestions|text"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@string/example_1_init"
-                        android:textSize="14sp" />
+                        android:text="@string/example_1_4_init"
+                        android:textSize="14sp"
+                        app:assetsFont="fonts/clmwts.ttf"
+                        app:keyBehaviour="insert"
+                        app:mask="XX:XX-XX-XX-XX"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <!-- (2) FixedHex (replace behaviour, fill mode = false): -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -94,7 +100,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="6dp"
                 android:text="@string/example_2_label"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -118,21 +123,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <net.akaish.ikey.hkb.HexTextInputEditText
-                        android:id="@+id/coloured_text"
+                    <net.akaish.ikey.hkb.FixedHexInputEditText
+                        android:id="@+id/simple_2_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="1234567890ABCDE"
-                        android:hint="@string/example_2_hint"
+                        android:hint="@string/example_1_4_hint"
                         android:inputType="textNoSuggestions|text"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@string/example_2_init"
+                        android:text="@string/example_1_4_init"
                         android:textSize="14sp"
-                        app:assetsFont="fonts/clmwts.ttf" />
+                        app:assetsFont="fonts/clmwts.ttf"
+                        app:keyBehaviour="replace"
+                        app:mask="XX:XX-XX-XX-XX"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <!-- (3 FixedHex (insert behaviour, fill mode = false): -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -141,7 +150,109 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="6dp"
                 android:text="@string/example_3_label"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/colorPrimary" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <net.akaish.ikey.hkb.FixedHexInputEditText
+                        android:id="@+id/simple_3_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/example_1_4_hint"
+                        android:inputType="textNoSuggestions|text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/example_1_4_init"
+                        android:textSize="14sp"
+                        app:assetsFont="fonts/clmwts.ttf"
+                        app:keyBehaviour="insert"
+                        app:fillMode="true"
+                        app:mask="XX:XX-XX-XX-XX"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- (4) FixedHex (replace behaviour, fill mode = false): -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:text="@string/example_4_label"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/colorPrimary" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <net.akaish.ikey.hkb.FixedHexInputEditText
+                        android:id="@+id/simple_4_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/example_1_4_hint"
+                        android:inputType="textNoSuggestions|text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/example_1_4_init"
+                        android:textSize="14sp"
+                        app:assetsFont="fonts/clmwts.ttf"
+                        app:keyBehaviour="replace"
+                        app:fillMode="true"
+                        app:mask="XX:XX-XX-XX-XX"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <!-- Dallas -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:text="@string/example_13_label"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -177,7 +288,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toStartOf="@+id/kf_dallas_crc_switch"
-                            android:text="@string/example_3_crc" />
+                            android:text="@string/example_13_crc" />
 
                         <Switch
                             android:id="@+id/kf_dallas_crc_switch"
@@ -195,18 +306,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <net.akaish.ikey.hkb.HexTextInputEditText
+                        <net.akaish.ikey.hkb.FixedHexInputEditText
                             android:id="@+id/kf_dallas_keycode_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:digits="1234567890ABCDE "
-                            android:hint="@string/example_3_hint"
+                            android:hint="@string/example_13_hint"
                             android:inputType="textNoSuggestions|text"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:text="@string/example_3_init"
+                            android:text="3D00000000000001"
                             android:textSize="14sp"
-                            app:assetsFont="fonts/clmwts.ttf" />
+                            app:assetsFont="fonts/clmwts.ttf"
+                            app:keyBehaviour="replace"
+                            app:fillMode="true"
+                            app:mask="XX:XX XX XX XX XX XX XX" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>

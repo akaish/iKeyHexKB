@@ -1,6 +1,6 @@
 <resources>
     <!--
-    ~ Copyright (c) 2019 iKey (ikey.ru)
+    ~ Copyright (c) 2019-2020 iKey (ikey.ru)
     ~ Author: Denis Bogomolov (akaish)
     ~
     ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,20 +21,24 @@
 
     <string name="app_name">iKey Hex KB Demo v0.4</string>
 
-    <string name="about_app_text">This this Demo application for iKey Hex KB v0.4.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright (c) 2019 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
+    <string name="about_app_text">This this Demo application for iKey Hex KB v0.4.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright © 2019 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
     <string name="about_app_link_text">iKeyHexKB project page.</string>
     <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
-    <string name="example_1_label">(1) Edit text with attached HKB:</string>
-    <string name="example_1_hint">Arbitrary hex string</string>
-    <string name="example_1_init">AA08B7CC22</string>
+    <string name="example_1_4_hint">Arbitrary hex string in XX:XX-XX-XX-XX format</string>
+    <string name="example_1_4_init">AABBCCDDEE</string>
 
-    <string name="example_2_label">(2) Edit text with attached HKB, custom font and decorations:</string>
-    <string name="example_2_hint">Arbitrary hex string</string>
-    <string name="example_2_init">42FF202B29</string>
+    <string name="example_1_label">(1) FixedHex (insert behaviour, fill mode = false):</string>
+    <string name="example_2_label">(2) FixedHex (replace behaviour, fill mode = false):</string>
+    <string name="example_3_label">(3) FixedHex (insert behaviour, fill mode = true):</string>
+    <string name="example_4_label">(4) FixedHex (replace behaviour, fill mode = true):</string>
 
-    <string name="example_3_label">(3) Edit text with attached HKB, CRC calculation, Red Mad Robot masks, custom font and decorations:</string>
-    <string name="example_3_hint">Dallas code (used in iButton keys)</string>
-    <string name="example_3_crc">CRC verification</string>
-    <string name="example_3_init">1234</string>
+    <string name="example_12_label">(XX) Edit text with attached HKB, custom font and decorations:</string>
+    <string name="example_12_hint">Arbitrary hex string</string>
+    <string name="example_12_init">42FF202B29</string>
+
+    <string name="example_13_label">(XX) Edit text with attached HKB, CRC calculation, Red Mad Robot masks, custom font and decorations:</string>
+    <string name="example_13_hint">Dallas code (used in iButton keys)</string>
+    <string name="example_13_crc">CRC verification</string>
+    <string name="example_13_init">1234</string>
 </resources>

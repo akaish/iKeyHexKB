@@ -15,7 +15,7 @@ dependencies {
 iKey Android Hex KB used in:
 * [https://play.google.com/store/apps/details?id=ru.ikey.express](https://play.google.com/store/apps/details?id=ru.ikey.express)
 
-Copyright (c) 2019 iKey (ikey.ru)
+Copyright (c) 2019-2020 iKey (ikey.ru)
 Author: Denis Bogomolov (akaish)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.

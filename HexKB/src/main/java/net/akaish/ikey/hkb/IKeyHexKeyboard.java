@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 iKey (ikey.ru)
+ *  Copyright (c) 2019-2020 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,12 +73,12 @@ public class IKeyHexKeyboard {
 
     private boolean isVisible = false;
 
-    final static private int CODE_DELETE = -5;
+    final static public int CODE_DELETE = -5;
     final static private int CODE_HIDE_KEYBOARD = -3;
-    final static private int CODE_HOME = 55001;
-    final static private int CODE_LEFT = 55002;
-    final static private int CODE_RIGHT = 55003;
-    final static private int CODE_END = 55004;
+    final static public int CODE_HOME = 55001;
+    final static public int CODE_LEFT = 55002;
+    final static public int CODE_RIGHT = 55003;
+    final static public int CODE_END = 55004;
     final static private int CODE_DONE = 55005; // Don't remember code for done, using code done instead
 
     private final SparseArray<InputFieldPair> inputFields = new SparseArray<>();
@@ -106,6 +106,26 @@ public class IKeyHexKeyboard {
             if(currentInputField < 0) return;
             InputFieldPair inputFieldPair = inputFields.get(currentInputField);
             if(inputFieldPair == null) return;
+
+            if(inputFieldPair.editText instanceof FixedHexInputEditText) {
+                switch (primaryCode) {
+                    case CODE_HIDE_KEYBOARD:
+                        isVisible = hideKeyboard.hideKeyboard();
+                        break;
+                    case CODE_DONE:
+                        if(onSendButton!=null) {
+                            if(onSendButton.send(inputFieldPair.editText)) {
+                                isVisible = hideKeyboard.hideKeyboard();
+                            }
+                        }
+                        break;
+                    default:
+                        inputFieldPair.editText.onKeyDown(primaryCode, null);
+                        break;
+                }
+                return;
+            }
+
             Editable editable = inputFieldPair.editText.getText();
             if(editable == null) return;
             IReplaceBehaviour replaceBehaviour = inputFieldPair.replaceBehaviour;
@@ -355,7 +375,7 @@ public class IKeyHexKeyboard {
     public void registerEditText(@NonNull EditText editText, @Nullable HexDecoratorTextWatcher decoratorTextWatcher,
                                  RMRSupportConfiguration rmrSupportConfiguration, IReplaceBehaviour replaceBehaviour) {
         if(!(decoratorTextWatcher == null && rmrSupportConfiguration != null)) {
-            editText.setFilters(FILTERS);
+            //editText.setFilters(FILTERS);
         }
 
         if(decoratorTextWatcher != null) {

@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 iKey (ikey.ru)
+ *  Copyright (c) 2019-2020 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,23 +21,6 @@
  *
  * ---
  */
-package ru.ikey.hexkb.ds;
+package net.akaish.ikey.hkb
 
-public class DallasDecoratorConfigurationBuilder {
-    private int colorCRCOk;
-    private int colorCRCWrong;
-
-    public DallasDecoratorConfigurationBuilder setColorCRCOk(int colorCRCOk) {
-        this.colorCRCOk = colorCRCOk;
-        return this;
-    }
-
-    public DallasDecoratorConfigurationBuilder setColorCRCWrong(int colorCRCWrong) {
-        this.colorCRCWrong = colorCRCWrong;
-        return this;
-    }
-
-    public DallasDecoratorConfiguration build() {
-        return new DallasDecoratorConfiguration(colorCRCOk, colorCRCWrong);
-    }
-}
+interface KeyboardSpan

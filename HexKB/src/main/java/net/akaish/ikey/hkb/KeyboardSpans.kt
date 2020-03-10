@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 iKey (ikey.ru)
+ *  Copyright (c) 2019-2020 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +21,12 @@
  *
  * ---
  */
-package ru.ikey.hexkb.ds;
+package net.akaish.ikey.hkb
 
-public class DallasDecoratorConfiguration {
-    final int crcOkColor;
-    final int crcWrongColor;
+import android.os.Parcel
+import android.text.style.ForegroundColorSpan
 
-    DallasDecoratorConfiguration(int colorCRCOk, int colorCRCWrong) {
-        this.crcOkColor = colorCRCOk;
-        this.crcWrongColor = colorCRCWrong;
-    }
+class KeyboardForegroundColorSpan: ForegroundColorSpan, KeyboardSpan {
+    constructor(color: Int) : super(color)
+    constructor(color: Parcel) : super(color)
 }

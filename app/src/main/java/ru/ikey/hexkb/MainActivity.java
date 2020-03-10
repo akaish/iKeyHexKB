@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 iKey (ikey.ru)
+ *  Copyright (c) 2019-2020 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,41 +34,36 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.redmadrobot.inputmask.MaskedTextChangedListener;
-
-import net.akaish.ikey.hkb.ColoredPairsDecoratorConfigurationBuilder;
-import net.akaish.ikey.hkb.ColoredPairsDecoratorTextWatcher;
+import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
 import net.akaish.ikey.hkb.IKeyHexKeyboardBuilder;
-import net.akaish.ikey.hkb.IReplaceBehaviour;
-import net.akaish.ikey.hkb.RMRSupportConfiguration;
+import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
+
+import org.apache.commons.codec.binary.Hex;
+
+import java.util.Arrays;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import ru.ikey.hexkb.ds.CRC8Dallas;
-import ru.ikey.hexkb.ds.DallasDecoratorConfiguration;
-import ru.ikey.hexkb.ds.DallasDecoratorConfigurationBuilder;
-import ru.ikey.hexkb.ds.DallasDecoratorTextWatcher;
-import ru.ikey.hexkb.ds.DallasRMR;
 
 import static java.text.MessageFormat.format;
 
-public class MainActivity extends AppCompatActivity implements DallasRMR.IDallasInput {
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.kf_dallas_crc_switch) Switch dallasCrcSwitch;
-    @BindView(R.id.kf_dallas_keycode_field) TextInputEditText dallasKeyCodeET;
-    @BindView(R.id.simple_text) TextInputEditText simpleText;
-    @BindView(R.id.coloured_text) TextInputEditText decoratedText;
-
+    @BindView(R.id.kf_dallas_keycode_field) FixedHexInputEditText dallasKeyCodeET;
+    @BindView(R.id.simple_1_text) FixedHexInputEditText simpleText1;
+    @BindView(R.id.simple_2_text) FixedHexInputEditText simpleText2;
+    @BindView(R.id.simple_3_text) FixedHexInputEditText simpleText3;
+    @BindView(R.id.simple_4_text) FixedHexInputEditText simpleText4;
     private static final String LINK_PATTERN = "<a href=\"{0}\">{1}</a>";
 
     @BindString(R.string.about_app_text) String aboutAppText;
@@ -77,49 +72,7 @@ public class MainActivity extends AppCompatActivity implements DallasRMR.IDallas
 
     @BindView(R.id.appInfo) TextView aboutAppTV;
 
-    private static final String DALLAS_INITIAL_VALUE = "3D00000000000001";
-    private static final String E8_PATTERN = "[__]:[__] [__] [__] [__] [__] [__] [__]";
-    private static final IReplaceBehaviour REPLACE_BEHAVIOUR = (i) -> '0';
-    private static final RMRSupportConfiguration RMR_S_CONF = new RMRSupportConfiguration(' ', '&', ':', '-');
-    private static final DallasDecoratorConfiguration DALLAS_DECORATOR_CONFIGURATION =
-            new DallasDecoratorConfigurationBuilder()
-                .setColorCRCOk(Color.parseColor("#0B7509"))
-                .setColorCRCWrong(Color.parseColor("#FF0000"))
-                .build();
-    private static final DallasDecoratorTextWatcher DALLAS_DECORATOR_TEXT_WATCHER =
-            new DallasDecoratorTextWatcher(DALLAS_DECORATOR_CONFIGURATION);
-    private static final CRC8Dallas CRC_8_DALLAS = new CRC8Dallas(true);
-    private static final DallasRMR DALLAS_RMR = new DallasRMR(CRC_8_DALLAS);
-
-    //----------------------------------------------------------------------------------------------
-    // DallasRMR.IDallasInput implementation
-    //----------------------------------------------------------------------------------------------
-    private boolean shouldSetDefaultText = true;
-
-    private boolean initialized = false;
-    private boolean shouldUpdateCRC = true;
-
-    public boolean onResumeInitialized() {
-        return initialized;
-    }
-
-    public boolean shouldUpdateCRC() {
-        return shouldUpdateCRC;
-    }
-
-    public void shouldUpdateCRC(boolean shouldUpdateCRC) {
-        this.shouldUpdateCRC = shouldUpdateCRC;
-    }
-
-    public boolean crcIsON() {
-        return dallasCrcSwitch.isChecked();
-    }
-
-    public EditText keyCodeEditText() {
-        return dallasKeyCodeET;
-    }
-
-    private MaskedTextChangedListener listener = null;
+    private static final CRC8Dallas crc8Dallas = new CRC8Dallas(true);
 
     //----------------------------------------------------------------------------------------------
     // Hex keyboard
@@ -154,44 +107,55 @@ public class MainActivity extends AppCompatActivity implements DallasRMR.IDallas
         super.onCreate(savedInstanceState);
         adjustFontScale( getResources().getConfiguration());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        DALLAS_RMR.setDallasInput(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         dallasKeyCodeET.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        dallasKeyCodeET.setText(DALLAS_INITIAL_VALUE);
-        if(listener != null)
-            dallasKeyCodeET.removeTextChangedListener(listener);
+
         initHKB();
 
-        // RED masks
-        listener = MaskedTextChangedListener.Companion.installOn(dallasKeyCodeET, E8_PATTERN, DALLAS_RMR);
+        iKeyHexKeyboard.registerEditText(simpleText1);
 
-        iKeyHexKeyboard.registerEditText(dallasKeyCodeET, DALLAS_DECORATOR_TEXT_WATCHER, RMR_S_CONF, REPLACE_BEHAVIOUR);
-        iKeyHexKeyboard.registerEditText(simpleText);
-        iKeyHexKeyboard.registerEditText(decoratedText, new ColoredPairsDecoratorTextWatcher(
-                new ColoredPairsDecoratorConfigurationBuilder()
-                        .setColorA(Color.parseColor("#0B7509"))
-                .setColorB(Color.parseColor("#333333"))
-                .setGroupLegnth(2).build()
-        ));
-        decoratedText.append("FF");
+        simpleText1.setDecorator(editable -> {
+            editable.setSpan(new KeyboardForegroundColorSpan(Color.BLUE), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        });
 
-        if (shouldSetDefaultText) {
-            dallasKeyCodeET.setText(DALLAS_INITIAL_VALUE);
-            shouldSetDefaultText = false;
-        }
-        initialized = true;
+        iKeyHexKeyboard.registerEditText(simpleText2);
+        iKeyHexKeyboard.registerEditText(simpleText3);
+        iKeyHexKeyboard.registerEditText(simpleText4);
+
+        iKeyHexKeyboard.registerEditText(dallasKeyCodeET);
+        dallasKeyCodeET.setPostProcessor( editable -> {
+            if(dallasCrcSwitch.isChecked()) {
+                String code = editable.toString().replace(" ", "").replace(":", "");
+                try {
+                    byte[] codeBytes = Hex.decodeHex(code);
+                    crc8Dallas.reset();
+                    crc8Dallas.update(Arrays.copyOfRange(codeBytes, 1, codeBytes.length));
+                    String newCRC = Long.toHexString(crc8Dallas.getValue()).toUpperCase();
+                    if(newCRC.length() < 2) newCRC = "0" + newCRC;
+                    editable.replace(0, 2, newCRC);
+                } catch (Throwable tr) { tr.printStackTrace(); }
+            }
+        });
+
+        dallasKeyCodeET.setDecorator( editable -> {
+            String code = editable.toString().replace(" ", "").replace(":", "");
+            try {
+                byte[] codeBytes = Hex.decodeHex(code);
+                crc8Dallas.reset();
+                crc8Dallas.update(Arrays.copyOfRange(codeBytes, 1, codeBytes.length));
+                long calculatedCRC = crc8Dallas.getValue();
+                long currentCRC = Long.parseLong(editable.subSequence(0, 2).toString(), 16);
+                if(currentCRC == calculatedCRC) {
+                    editable.setSpan(new KeyboardForegroundColorSpan(Color.BLUE), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                } else {
+                    editable.setSpan(new KeyboardForegroundColorSpan(Color.RED), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                }
+            } catch (Throwable tr) { tr.printStackTrace(); }
+        });
 
         aboutAppTV.setText(buildHTMLString());
         aboutAppTV.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    @Override public void onResume() {
-        super.onResume();
-    }
-
-    @Override public void onPause() {
-        super.onPause();
     }
 
     @Override public void onBackPressed() {
