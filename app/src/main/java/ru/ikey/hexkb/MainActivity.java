@@ -33,6 +33,7 @@ import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -41,7 +42,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
-import net.akaish.ikey.hkb.IKeyHexKeyboardBuilder;
 import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
 
 import org.apache.commons.codec.binary.Hex;
@@ -77,14 +77,14 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     // Hex keyboard
     //----------------------------------------------------------------------------------------------
-    protected IKeyHexKeyboard iKeyHexKeyboard = null;
+    protected IKeyHexKeyboard hexKeyboard = null;
 
     void initHKB() {
-        iKeyHexKeyboard = null;
-        iKeyHexKeyboard = new IKeyHexKeyboardBuilder()
-                .setHostActivity(this)
-                .setKeyboardViewId(R.id.ikey_main_hex_kb)
-                .setContainerViewId(R.id.ikey_main_hex_kb_container)
+        hexKeyboard = null;
+        hexKeyboard = new IKeyHexKeyboard.Builder()
+                .withHost(this)
+                .withKeyboardViewId(R.id.ikey_main_hex_kb)
+                .withContainerViewId(R.id.ikey_main_hex_kb_container)
                 .build();
     }
 
@@ -113,17 +113,15 @@ public class MainActivity extends AppCompatActivity {
 
         initHKB();
 
-        iKeyHexKeyboard.registerEditText(simpleText1);
+        hexKeyboard.registerInput(simpleText1);
 
-        simpleText1.setDecorator(editable -> {
-            editable.setSpan(new KeyboardForegroundColorSpan(Color.BLUE), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        });
+        simpleText1.setDecorator(editable -> editable.setSpan(new KeyboardForegroundColorSpan(Color.BLUE), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE));
 
-        iKeyHexKeyboard.registerEditText(simpleText2);
-        iKeyHexKeyboard.registerEditText(simpleText3);
-        iKeyHexKeyboard.registerEditText(simpleText4);
+        hexKeyboard.registerInput(simpleText2);
+        hexKeyboard.registerInput(simpleText3);
+        hexKeyboard.registerInput(simpleText4);
 
-        iKeyHexKeyboard.registerEditText(dallasKeyCodeET);
+        hexKeyboard.registerInput(dallasKeyCodeET);
         dallasKeyCodeET.setPostProcessor( editable -> {
             if(dallasCrcSwitch.isChecked()) {
                 String code = editable.toString().replace(" ", "").replace(":", "");
@@ -159,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override public void onBackPressed() {
-        if(!iKeyHexKeyboard.onBackPressed())
+        if(!hexKeyboard.onBackPressed())
             super.onBackPressed();
     }
 

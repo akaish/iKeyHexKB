@@ -19,9 +19,9 @@
     ~ https://ikey.ru
     -->
 
-    <string name="app_name">iKey Hex KB Demo v0.4</string>
+    <string name="app_name">iKey Hex KB Demo v0.5</string>
 
-    <string name="about_app_text">This this Demo application for iKey Hex KB v0.4.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright © 2019 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
+    <string name="about_app_text">This this Demo application for iKey Hex KB v0.5.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright © 2019–2020 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
     <string name="about_app_link_text">iKeyHexKB project page.</string>
     <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
@@ -37,7 +37,7 @@
     <string name="example_12_hint">Arbitrary hex string</string>
     <string name="example_12_init">42FF202B29</string>
 
-    <string name="example_13_label">(XX) Edit text with attached HKB, CRC calculation, Red Mad Robot masks, custom font and decorations:</string>
+    <string name="example_13_label">(XX) FixedHex (replace behaviour, fill mode = true), CRC calculation, custom font and decorations:</string>
     <string name="example_13_hint">Dallas code (used in iButton keys)</string>
     <string name="example_13_crc">CRC verification</string>
     <string name="example_13_init">1234</string>

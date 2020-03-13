@@ -18,9 +18,9 @@
     ~ This file is a part of Android Hex Keyboard, more info at
     ~ https://ikey.ru
     -->
-    <string name="app_name">iKey Hex KB Demo v0.4</string>
+    <string name="app_name">iKey Hex KB Demo v0.5</string>
 
-    <string name="about_app_text">Демка библиотеки iKey Hex KB v0.4.\nДанная демка, как и iKey Hex KB, лицензирована Apache v.2 License. Копирайт © 2019 ikey.ru, автор Денис Богомолов (akaish), подробнее: {0}</string>
+    <string name="about_app_text">Демка библиотеки iKey Hex KB v0.5.\nДанная демка, как и iKey Hex KB, лицензирована Apache v.2 License. Копирайт © 2019–2020 ikey.ru, автор Денис Богомолов (akaish), подробнее: {0}</string>
     <string name="about_app_link_text">iKeyHexKB project page.</string>
     <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
@@ -30,13 +30,13 @@
     <string name="example_1_label">(1) Поле FixedHex (вставка, заполнение выкл):</string>
     <string name="example_2_label">(2) Поле FixedHex (замена, заполнение выкл):</string>
     <string name="example_3_label">(3) Поле FixedHex (вставка, заполнение вкл):</string>
-    <string name="example_4_label">(4) Поле FixedHex (замена, заполнение выкл):</string>
+    <string name="example_4_label">(4) Поле FixedHex (замена, заполнение вкл):</string>
 
     <string name="example_12_label">(XX) Поле ввода с HKB, особый шрифт и декорации:</string>
     <string name="example_12_hint">Произвольный шестнадцатеричный код</string>
     <string name="example_12_init">42FF202B29</string>
 
-    <string name="example_13_label">(XX) Поле ввода с HKB, проверка CRC, маски Red Mad Robot, особый шрифт и декорации:</string>
+    <string name="example_13_label">(XX) Поле FixedHex (замена, заполнение вкл), проверка CRC, особый шрифт и декорации:</string>
     <string name="example_13_hint">Код dallas (используется в ключах iButton)</string>
     <string name="example_13_crc">Проверка CRC</string>
     <string name="example_13_init">1234</string>

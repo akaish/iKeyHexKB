@@ -54,7 +54,7 @@ dependencies {
 
 group = "net.akaish.ikey.hkb"
 archivesBaseName = "ikey-hkb"
-version = "0.4"
+version = "0.5"
 
 task deleteJar(type: Delete) {
     delete 'libs/jars/'+archivesBaseName+'.'+version+'.jar'

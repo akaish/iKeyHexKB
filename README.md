@@ -1,12 +1,12 @@
 ### iKey Android Hex KB
-iKey Android Hex KB is a little library that provides easy to implement hexademical keyboard and text input fields with support of Red Mad Robot masks and spannable decorations.
+iKey Android Hex KB is a little library that provides easy to implement hexademical keyboard and text input fields with support of formatting and spannable decorations.
 
 See demo application for example code snippets.
 
 ### Gradle dependence
 ```Java
 dependencies {
-    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.4'
+    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.5'
 }
 ```
 
@@ -14,6 +14,7 @@ dependencies {
 
 iKey Android Hex KB used in:
 * [https://play.google.com/store/apps/details?id=ru.ikey.express](https://play.google.com/store/apps/details?id=ru.ikey.express)
+* [https://play.google.com/store/apps/details?id=ikey.ikeybase&hl=ru](https://play.google.com/store/apps/details?id=ikey.ikeybase&hl=ru)
 
 Copyright (c) 2019-2020 iKey (ikey.ru)
 Author: Denis Bogomolov (akaish)

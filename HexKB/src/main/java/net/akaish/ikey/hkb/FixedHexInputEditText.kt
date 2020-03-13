@@ -31,11 +31,15 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 
 import com.google.android.material.textfield.TextInputEditText
-import net.akaish.ikey.hkb.IKeyHexKeyboard.*
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_DELETE
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_END
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_HOME
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_LEFT
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
-class FixedHexInputEditText : TextInputEditText {
+class FixedHexInputEditText : TextInputEditText, HexInputField {
 
     companion object {
         const val placeholderCapital: Char = 'X'
@@ -114,8 +118,8 @@ class FixedHexInputEditText : TextInputEditText {
                 else -> {
                     if (it.isPrintingKey) {
                         type(parameters.isReplaceMode, it.keyCode)
-                    }
-                    true
+                        true
+                    } else false
                 }
             }
         } ?: run {
