@@ -7,7 +7,7 @@ See demo application for example code snippets.
 ```Java
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
-    
+
     implementation 'net.akaish.ikey.hkb:ikey-hkb:0.5'
 }
 ```
