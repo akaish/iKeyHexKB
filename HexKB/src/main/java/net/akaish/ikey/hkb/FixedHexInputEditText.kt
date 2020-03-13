@@ -78,8 +78,6 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
         init()
     }
 
-    override fun addTextChangedListener(watcher: TextWatcher) { }
-
     private fun init() {
         super.removeTextChangedListener(hexTextWatcher)
         super.addTextChangedListener(hexTextWatcher)
