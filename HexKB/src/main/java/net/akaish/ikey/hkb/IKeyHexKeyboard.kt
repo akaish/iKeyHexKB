@@ -39,7 +39,7 @@ import android.widget.EditText
 import androidx.core.util.set
 import androidx.core.util.size
 
-class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainerId: Int,
+class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView, private val containerView: View?,
                       hideKeyboardParam: HideKeyboard?, showKeyboardParam: ShowKeyboard?, private val onSendButton: OnSendButton?) {
 
     companion object {
@@ -57,9 +57,6 @@ class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainer
     private val showKeyboard: ShowKeyboard
     private val state: KeyboardState
 
-    private val keyboardView: KeyboardView = host.findViewById(keyboardViewId)
-    private val containerView: View? = if(keyboardContainerId > 0) host.findViewById(keyboardContainerId) else null
-
     interface HideKeyboard { fun hideKeyboard(): Boolean }
     interface ShowKeyboard { fun showKeyboard(v: View?): Boolean }
     interface KeyboardState { fun isVisible(): Boolean }
@@ -72,8 +69,13 @@ class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainer
     }
 
     private var isVisible = false
+    private var isEnabled = true
     private val registeredInputs = SparseArray<FixedHexInputEditText>()
     private var currentInputField = -1
+
+    fun enable() { isEnabled = true }
+    fun disable() { isEnabled = false }
+    fun isEnabled() = isEnabled
 
     private val keyboardActionListener = object : KeyboardView.OnKeyboardActionListener {
 
@@ -142,6 +144,7 @@ class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainer
     }
 
     private fun showKeyboard(v: View) {
+        if(!isEnabled) return
         isVisible = showKeyboard.showKeyboard(v)
     }
 
@@ -157,10 +160,15 @@ class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainer
         } else false
     }
 
+    fun registerInputs(vararg editTexts: EditText) {
+        for(input in editTexts) registerInput(input)
+    }
+
     fun registerInput(editText: EditText) {
         check(editText is FixedHexInputEditText) { "Provided text input is not instance of FixedHexInputEditText!" }
 
         editText.setOnFocusChangeListener { v, hasFocus ->
+            if(!isEnabled) return@setOnFocusChangeListener
             if(hasFocus) {
                 showKeyboard(v).also { currentInputField = v.id }
             } else hideKeyboard
@@ -215,13 +223,25 @@ class IKeyHexKeyboard(val host: Activity, keyboardViewId: Int, keyboardContainer
             private set
         var onSendButton: OnSendButton? = null
 
+        var containerView: View? = null
+            private set
+        var keyboardView: KeyboardView? = null
+            private set
+
         fun withHost(activity: Activity) = apply { host = activity }
         fun withKeyboardViewId(id: Int) = apply { keyboardViewId = id }
         fun withContainerViewId(id: Int) = apply { containerViewId = id }
+        fun withKeyboardView(keyboardView: KeyboardView) = apply { this.keyboardView = keyboardView }
+        fun withContainerView(containerView: View?) = apply { this.containerView = containerView }
         fun withHideKeyboard(hideKeyboard: HideKeyboard?) = apply { this.hideKeyboard = hideKeyboard }
         fun withShowKeyboard(showKeyboard: ShowKeyboard?) = apply { this.showKeyboard = showKeyboard }
         fun withOnSendButton(onSendButton: OnSendButton?) = apply { this.onSendButton = onSendButton }
 
-        fun build() = IKeyHexKeyboard(host, keyboardViewId, containerViewId, hideKeyboard, showKeyboard, onSendButton)
+        fun build(): IKeyHexKeyboard {
+            if(keyboardView == null) keyboardView = host.findViewById(keyboardViewId)
+            if(containerView == null)
+                containerView = if(containerViewId > 0) host.findViewById(containerViewId) else null
+            return IKeyHexKeyboard(host, keyboardView!!, containerView, hideKeyboard, showKeyboard, onSendButton)
+        }
     }
 }

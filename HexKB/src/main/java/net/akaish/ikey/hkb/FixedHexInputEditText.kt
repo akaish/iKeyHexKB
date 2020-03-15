@@ -39,7 +39,7 @@ import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
-class FixedHexInputEditText : TextInputEditText, HexInputField {
+open class FixedHexInputEditText : TextInputEditText, HexInputField {
 
     companion object {
         const val placeholderCapital: Char = 'X'
@@ -54,7 +54,7 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
     }
 
     private val parameters: Parameters
-    private val hexTextWatcher: HexTextWatcher
+    private var hexTextWatcher: HexTextWatcher
     private var customTypeFace: Typeface? = null
 
     private var postProcessor: FixedHexPostProcessor? = null
@@ -85,6 +85,20 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
         customTypeFace?.let { typeface = it }
         val last = editableText.toString()
         setText(last)
+        setSelection(0)
+    }
+
+    fun setAssetsFont(fontPath: String?) {
+        parameters.assetsFontPath = fontPath
+        parameters.assetsFontPath?.let { customTypeFace = Typeface.createFromAsset(context.assets, it)}
+        customTypeFace?.let { typeface = it }
+    }
+
+    fun resetMask(mask: String) {
+        super.removeTextChangedListener(hexTextWatcher)
+        parameters.mask = mask
+        hexTextWatcher = HexTextWatcher(parameters.mask)
+        super.addTextChangedListener(hexTextWatcher)
         setSelection(0)
     }
 
@@ -254,14 +268,15 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
         override fun afterTextChanged(s: Editable) {
             if (lock) return
             lock = true
+            var endSelection = 0
             val iterator = s.forwardIterator()
             val sb = StringBuilder()
-            for(maskChar in mask) {
-                if(maskChar.isValuable()) {
-                    if(iterator.hasNext())
+            for (maskChar in mask) {
+                if (maskChar.isValuable()) {
+                    if (iterator.hasNext())
                         while (iterator.hasNext()) {
                             val userInput = iterator.next()
-                            if(userInput.isHexDigit()) {
+                            if (userInput.isHexDigit()) {
                                 sb.append(userInput.toPlaceholderCase(maskChar))
                                 break
                             } else continue
@@ -270,7 +285,7 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
                 } else sb.append(maskChar)
             }
             s.replace(0, s.length, sb.toString())
-            val endSelection = selectionEnd
+            endSelection = selectionEnd
 
             postProcessor?.let { it.process(s) }
             decorator?.let {
@@ -280,8 +295,13 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
             }
 
             moveToPosition?.let {
-                if(it > 0) setSelection(it, it).also { moveToPosition = null }
-                else setSelection(s.lastIndex+1, s.lastIndex+1).also { moveToPosition = null }
+                try {
+                    if (it > 0) setSelection(it, it).also { moveToPosition = null }
+                    else setSelection(s.lastIndex + 1, s.lastIndex + 1).also { moveToPosition = null }
+                } catch (tr: Throwable) {
+                    tr.printStackTrace()
+                    setSelection(0)
+                }
             } ?: run {
                 setSelection(endSelection)
             }
@@ -293,7 +313,7 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
     //----------------------------------------------------------------------------------------------
     // Attributes parsing
     //----------------------------------------------------------------------------------------------
-    data class Parameters(val assetsFontPath: String?, val mask: String, val behavior: Int, val fillMode: Boolean) {
+    data class Parameters(var assetsFontPath: String?, var mask: String, val behavior: Int, val fillMode: Boolean) {
         val isReplaceMode = behavior == REPLACE_KEY_BEHAVIOR
     }
 
@@ -314,7 +334,7 @@ class FixedHexInputEditText : TextInputEditText, HexInputField {
             }
         }
         typedArray.recycle()
-        if(mask == null) throw NullPointerException("FixedHexInputEditText requires mask attr parameter to be set!")
+        if(mask == null) mask = defaultMask
         behavior = when(behaviorString) {
             "insert" -> INSERT_KEY_BEHAVIOUR
             "replace" -> REPLACE_KEY_BEHAVIOR
