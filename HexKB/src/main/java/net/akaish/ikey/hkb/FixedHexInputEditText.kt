@@ -37,7 +37,7 @@ import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_HOME
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_LEFT
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
 import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
+import java.util.*
 
 open class FixedHexInputEditText : TextInputEditText, HexInputField {
 
@@ -52,6 +52,8 @@ open class FixedHexInputEditText : TextInputEditText, HexInputField {
 
         const val defaultMask = "XX XX XX XX XX XX XX XX"
     }
+
+    val fieldId = UUID.randomUUID().mostSignificantBits
 
     private val parameters: Parameters
     private var hexTextWatcher: HexTextWatcher
