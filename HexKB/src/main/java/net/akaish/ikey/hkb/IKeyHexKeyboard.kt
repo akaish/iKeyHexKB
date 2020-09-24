@@ -29,7 +29,7 @@ import android.inputmethodservice.KeyboardView
 import android.os.Build
 import android.text.InputType
 import android.util.Log
-import android.util.SparseArray
+import android.util.LongSparseArray
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -70,8 +70,8 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
 
     private var isVisible = false
     private var isEnabled = true
-    private val registeredInputs = SparseArray<FixedHexInputEditText>()
-    private var currentInputField = -1
+    private val registeredInputs = LongSparseArray<FixedHexInputEditText>()
+    private var currentInputField: Long? = null
 
     fun enable() { isEnabled = true }
     fun disable() { isEnabled = false }
@@ -80,18 +80,19 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
     private val keyboardActionListener = object : KeyboardView.OnKeyboardActionListener {
 
         override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
-            if(currentInputField < 0) return
-            registeredInputs[currentInputField]?.let { inputField ->
-                when(primaryCode) {
-                    CODE_HIDE_KEYBOARD -> isVisible = hideKeyboard.hideKeyboard()
-                    CODE_DONE -> {
-                        onSendButton?.let {
-                            if(it.send(inputField)) {
-                                isVisible = hideKeyboard.hideKeyboard()
+            currentInputField?.let { fieldId ->
+                registeredInputs[fieldId]?.let { inputField ->
+                    when(primaryCode) {
+                        CODE_HIDE_KEYBOARD -> isVisible = hideKeyboard.hideKeyboard()
+                        CODE_DONE -> {
+                            onSendButton?.let {
+                                if(it.send(inputField)) {
+                                    isVisible = hideKeyboard.hideKeyboard()
+                                }
                             }
                         }
+                        else -> inputField.onKeyDown(primaryCode, null)
                     }
-                    else -> inputField.onKeyDown(primaryCode, null)
                 }
             }
 
@@ -170,7 +171,7 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         editText.setOnFocusChangeListener { v, hasFocus ->
             if(!isEnabled) return@setOnFocusChangeListener
             if(hasFocus) {
-                showKeyboard(v).also { currentInputField = v.id }
+                showKeyboard(v).also { currentInputField = (v as FixedHexInputEditText).fieldId }
             } else hideKeyboard
         }
 
@@ -194,15 +195,17 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
             true
         }
 
-        registeredInputs[editText.id] = editText
+        registeredInputs[editText.fieldId] = editText
         editText.setInputType(editText.getInputType() or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
     }
 
     fun unregisterInput(editText: EditText) {
-        registeredInputs[editText.id]?.let {
-            it.onFocusChangeListener = null
-            it.setOnClickListener(null)
-            it.setOnTouchListener(null)
+        if(editText is FixedHexInputEditText) {
+            registeredInputs[editText.fieldId]?.let {
+                it.onFocusChangeListener = null
+                it.setOnClickListener(null)
+                it.setOnTouchListener(null)
+            }
         }
     }
 
