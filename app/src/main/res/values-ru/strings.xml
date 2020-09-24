@@ -18,7 +18,7 @@
     ~ This file is a part of Android Hex Keyboard, more info at
     ~ https://ikey.ru
     -->
-    <string name="app_name">iKey Hex KB Demo v0.5</string>
+    <string name="app_name">iKey Hex KB Demo v0.5.4</string>
 
     <string name="about_app_text">Демка библиотеки iKey Hex KB v0.5.\nДанная демка, как и iKey Hex KB, лицензирована Apache v.2 License. Копирайт © 2019–2020 ikey.ru, автор Денис Богомолов (akaish), подробнее: {0}</string>
     <string name="about_app_link_text">iKeyHexKB project page.</string>

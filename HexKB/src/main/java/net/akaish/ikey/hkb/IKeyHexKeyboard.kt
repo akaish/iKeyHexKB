@@ -207,7 +207,7 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
     }
 
     fun unregisterAllInputs() {
-        for(i in 0..registeredInputs.size) unregisterInput(registeredInputs.valueAt(i))
+        for(i in 0 until registeredInputs.size) unregisterInput(registeredInputs.valueAt(i))
     }
 
     class Builder {
