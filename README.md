@@ -8,7 +8,7 @@ See demo application for example code snippets.
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
 
-    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.5'
+    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.5.6'
 }
 ```
 
@@ -18,7 +18,7 @@ iKey Android Hex KB used in:
 * [https://play.google.com/store/apps/details?id=ru.ikey.express](https://play.google.com/store/apps/details?id=ru.ikey.express)
 * [https://play.google.com/store/apps/details?id=ikey.ikeybase&hl=ru](https://play.google.com/store/apps/details?id=ikey.ikeybase&hl=ru)
 
-Copyright (c) 2019-2020 iKey (ikey.ru)
+Copyright (c) 2019-2021 iKey (ikey.ru)
 Author: Denis Bogomolov (akaish)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.

@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2020 iKey (ikey.ru)
+ *  Copyright (c) 2019-2021 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,8 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
         simpleText1.setDecorator(editable -> editable.setSpan(new KeyboardForegroundColorSpan(Color.BLUE), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE));
 
+        simpleText2.setOnFocusChangeListener((v, onFocused) -> Log.e("134", "BEFORE"));
         hexKeyboard.registerInput(simpleText2);
         hexKeyboard.registerInput(simpleText3);
+        simpleText3.setOnFocusChangeListener((v, onFocused) -> Log.e("134", "AFTER"));
         hexKeyboard.registerInput(simpleText4);
 
         hexKeyboard.registerInput(dallasKeyCodeET);

@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2020 iKey (ikey.ru)
+ *  Copyright (c) 2019-2021 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@
  */
 package net.akaish.ikey.hkb
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.text.Editable
@@ -366,6 +367,100 @@ open class FixedHexInputEditText : TextInputEditText, HexInputField {
     fun setPostProcessor(postProcessor: FixedHexPostProcessor) {
         this.postProcessor = postProcessor
         text = text
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Wrapping OnTouch, OnClick and OnFocus
+    //----------------------------------------------------------------------------------------------
+    // OnClick
+    private var onClickListener: OnClickListener? = null
+    private var onClickListenerWrapper: OnClickListener? = null
+
+    private fun createWrappedOnClickListener() {
+        onClickListener.let { onClc ->
+            onClickListenerWrapper.let { onClcWrapper ->
+                when {
+                    onClc == null && onClcWrapper == null -> super.setOnClickListener(null)
+                    onClc != null && onClcWrapper == null -> super.setOnClickListener(onClc)
+                    onClc == null && onClcWrapper != null -> super.setOnClickListener(onClcWrapper)
+                    onClc != null && onClcWrapper != null -> super.setOnClickListener {
+                        onClcWrapper.onClick(it)
+                        onClc.onClick(it)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun setOnClickListener(l: OnClickListener?) {
+        onClickListener = l
+        createWrappedOnClickListener()
+    }
+
+    fun setOnClickListenerWrapper(l: OnClickListener?) {
+        onClickListenerWrapper = l
+        createWrappedOnClickListener()
+    }
+
+    // OnTouch
+    private var onTouchListener: OnTouchListener? = null
+    private var onTouchListenerWrapper: OnTouchListener? = null
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun createWrappedOnTouchListener() {
+        onTouchListener.let { onTouch ->
+            onTouchListenerWrapper.let { onTouchWrapper ->
+                when {
+                    onTouch == null && onTouchWrapper == null -> super.setOnTouchListener(null)
+                    onTouch != null && onTouchWrapper == null -> super.setOnTouchListener(onTouch)
+                    onTouch == null && onTouchWrapper != null -> super.setOnTouchListener(onTouchWrapper)
+                    onTouch != null && onTouchWrapper != null -> super.setOnTouchListener { v, mE ->
+                        onTouchWrapper.onTouch(v, mE)
+                        onTouch.onTouch(v, mE)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun setOnTouchListener(l: OnTouchListener?) {
+        onTouchListener = l
+        createWrappedOnTouchListener()
+    }
+
+    fun setOnTouchListenerWrapper(l: OnTouchListener?) {
+        onTouchListenerWrapper = l
+        createWrappedOnTouchListener()
+    }
+
+    // OnFocus
+    private var onFocusChangeListenerGeneric: OnFocusChangeListener? = null
+    private var onFocusChangeListenerWrapper: OnFocusChangeListener? = null
+
+    private fun createWrappedOnFocusChangedListener() {
+        onFocusChangeListenerGeneric.let { onFocus ->
+            onFocusChangeListenerWrapper.let { onFocusWrapper ->
+                when {
+                    onFocus == null && onFocusWrapper == null -> super.setOnFocusChangeListener(null)
+                    onFocus != null && onFocusWrapper == null -> super.setOnFocusChangeListener(onFocus)
+                    onFocus == null && onFocusWrapper != null -> super.setOnFocusChangeListener(onFocusWrapper)
+                    onFocus != null && onFocusWrapper != null -> super.setOnFocusChangeListener { v, hasFocus ->
+                        onFocusWrapper.onFocusChange(v, hasFocus)
+                        onFocus.onFocusChange(v, hasFocus)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun setOnFocusChangeListener(l: OnFocusChangeListener?) {
+        onFocusChangeListenerGeneric = l
+        createWrappedOnFocusChangedListener()
+    }
+
+    fun setOnFocusChangeListenerWrapper(l: OnFocusChangeListener?) {
+        onFocusChangeListenerWrapper = l
+        createWrappedOnFocusChangedListener()
     }
 
     //----------------------------------------------------------------------------------------------

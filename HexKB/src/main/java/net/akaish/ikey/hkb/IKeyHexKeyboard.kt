@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2020 iKey (ikey.ru)
+ *  Copyright (c) 2019-2021 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@
  */
 package net.akaish.ikey.hkb
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -30,6 +31,7 @@ import android.os.Build
 import android.text.InputType
 import android.util.Log
 import android.util.LongSparseArray
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -165,26 +167,26 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         for(input in editTexts) registerInput(input)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun registerInput(editText: EditText) {
         check(editText is FixedHexInputEditText) { "Provided text input is not instance of FixedHexInputEditText!" }
 
-        editText.setOnFocusChangeListener { v, hasFocus ->
-            if(!isEnabled) return@setOnFocusChangeListener
-            if(hasFocus) {
+        editText.setOnFocusChangeListenerWrapper(View.OnFocusChangeListener { v, hasFocus ->
+            if (!isEnabled) return@OnFocusChangeListener
+            if (hasFocus) {
                 showKeyboard(v).also { currentInputField = (v as FixedHexInputEditText).fieldId }
             } else hideKeyboard
-        }
+        })
 
-        editText.setOnClickListener {v -> this.showKeyboard(v)}
+        editText.setOnClickListenerWrapper( View.OnClickListener { v -> this.showKeyboard(v)})
 
-        editText.setOnTouchListener { _, event ->
+        editText.setOnTouchListenerWrapper(View.OnTouchListener { _: View, event: MotionEvent ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 editText.setShowSoftInputOnFocus(false)
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 try {
                     val method = EditText::class.java.getMethod(
-                            "setShowSoftInputOnFocus"
-                            , *arrayOf<Class<*>?>(Boolean::class.javaPrimitiveType))
+                            "setShowSoftInputOnFocus", Boolean::class.javaPrimitiveType)
                     method.isAccessible = true
                     method.invoke(editText, false)
                 } catch (e: Exception) {
@@ -193,7 +195,7 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
             }
             editText.onTouchEvent(event)
             true
-        }
+        })
 
         registeredInputs[editText.fieldId] = editText
         editText.setInputType(editText.getInputType() or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
@@ -202,9 +204,9 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
     fun unregisterInput(editText: EditText) {
         if(editText is FixedHexInputEditText) {
             registeredInputs[editText.fieldId]?.let {
-                it.onFocusChangeListener = null
+                it.setOnFocusChangeListenerWrapper(null)
                 it.setOnClickListener(null)
-                it.setOnTouchListener(null)
+                it.setOnTouchListenerWrapper(null)
             }
         }
     }
