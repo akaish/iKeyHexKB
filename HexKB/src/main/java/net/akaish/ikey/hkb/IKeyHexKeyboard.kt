@@ -205,7 +205,7 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         if(editText is FixedHexInputEditText) {
             registeredInputs[editText.fieldId]?.let {
                 it.setOnFocusChangeListenerWrapper(null)
-                it.setOnClickListener(null)
+                it.setOnClickListenerWrapper(null)
                 it.setOnTouchListenerWrapper(null)
             }
         }
