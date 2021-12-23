@@ -27,38 +27,33 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Log
 import android.view.KeyEvent
-
-import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_DELETE
-import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_END
-import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_HOME
-import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_LEFT
-import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
 import net.akaish.ikey.hkb.Util.Companion.backwardIterator
 import net.akaish.ikey.hkb.Util.Companion.forwardIterator
 import net.akaish.ikey.hkb.Util.Companion.hexOnly
 import net.akaish.ikey.hkb.Util.Companion.isHexDigit
-import net.akaish.ikey.hkb.Util.Companion.isValuable
 import net.akaish.ikey.hkb.Util.Companion.toPlaceholderCase
 
-class FixedHexInputEditText : AbstractHexInputField {
+@Suppress("Unused")
+class ArbitraryHexInputEditText : AbstractHexInputField {
 
     constructor(context: Context) : super(context) {
-        init(HexTextWatcher(attributes.mask))
+        init(HexTextWatcher())
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(HexTextWatcher(attributes.mask))
+        init(HexTextWatcher())
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(HexTextWatcher(attributes.mask))
+        init(HexTextWatcher())
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         event?.let {
             return when (keyCode) {
-                KeyEvent.KEYCODE_DEL -> del(attributes.isReplaceMode)
+                KeyEvent.KEYCODE_DEL -> del()
                 KeyEvent.KEYCODE_FORWARD_DEL -> true
                 KeyEvent.KEYCODE_TAB -> true
                 KeyEvent.KEYCODE_MOVE_HOME -> {
@@ -82,34 +77,34 @@ class FixedHexInputEditText : AbstractHexInputField {
                 }
                 else -> {
                     if (it.isPrintingKey) {
-                        type(attributes.isReplaceMode, it.keyCode)
+                        type(it.keyCode)
                         true
                     } else false
                 }
             }
         } ?: run {
             return when (keyCode) {
-                CODE_DELETE -> del(attributes.isReplaceMode)
-                CODE_LEFT -> {
+                IKeyHexKeyboard.CODE_DELETE -> del()
+                IKeyHexKeyboard.CODE_LEFT -> {
                     if(selectionStart > 0)
                         setSelection(selectionStart - 1)
                     true
                 }
-                CODE_RIGHT -> {
+                IKeyHexKeyboard.CODE_RIGHT -> {
                     if(selectionStart < editableText.length) {
                         setSelection(1 + selectionStart)
                     }
                     true
                 }
-                CODE_HOME -> {
+                IKeyHexKeyboard.CODE_HOME -> {
                     setSelection(0)
                     true
                 }
-                CODE_END -> {
+                IKeyHexKeyboard.CODE_END -> {
                     setSelection(editableText.length)
                     true
                 }
-                else -> type(attributes.isReplaceMode, keyCode)
+                else -> type(keyCode)
             }
         }
     }
@@ -117,56 +112,28 @@ class FixedHexInputEditText : AbstractHexInputField {
     //----------------------------------------------------------------------------------------------
     // Printing
     //----------------------------------------------------------------------------------------------
-    private fun type(replaceMode: Boolean, keyCode: Int): Boolean {
+    private fun type(keyCode: Int): Boolean {
         val toPrintHexOnly = String(Character.toChars(keyCode)).hexOnly()
         if(toPrintHexOnly.toCharArray().isEmpty()) return true
         val startSelection = selectionStart
         val endSelection = selectionEnd
         if(startSelection == endSelection) {
-            if(startSelection < editableText.length) {
-                val iterator = editableText.forwardIterator(startSelection)
-                while (iterator.hasNext()) {
-                    if(iterator.next().isHexDigit()) {
-                        typeChar(replaceMode, toPrintHexOnly[0].toString(), iterator.position)
-                        return true
-                    }
-                    continue
-                }
-            }
+            editableText.insert(endSelection, (toPrintHexOnly[0].toString()))
         } else {
-            if(endSelection <= editableText.length) {
-                if (attributes.fillMode) {
-                    val iterator = editableText.forwardIterator(startSelection)
-                    while (iterator.hasNext() && iterator.position < endSelection) {
-                        if (iterator.next().isHexDigit()) typeChar(replaceMode, toPrintHexOnly[0].toString(), iterator.position)
-                        continue
-                    }
-                } else {
-                    del(replaceMode)
-                    val newSelection = selectionEnd
-                    if(startSelection <= editableText.length) {
-                        val iterator = editableText.forwardIterator(startSelection)
-                        while (iterator.hasNext()) {
-                            if(iterator.next().isHexDigit()) {
-                                typeChar(replaceMode, toPrintHexOnly[0].toString(), iterator.position, newSelection+1)
-                                return true
-                            }
-                            continue
-                        }
-                    }
-                }
+            val iterator = editableText.forwardIterator(startSelection)
+            while (iterator.hasNext()) {
+                if (iterator.next().isHexDigit()) typeChar(toPrintHexOnly[0].toString(), iterator.position + 1)
+                continue
             }
         }
         return true
     }
 
-    private fun typeChar(replaceMode: Boolean, char: String, position: Int, newSelection: Int = position) {
-        if (replaceMode) editableText.replace(position - 1, position, char)
-        else editableText.insert(position - 1, char)
-        setSelection(newSelection)
+    private fun typeChar(char: String, position: Int) {
+        editableText.insert(position - 1, char)
     }
 
-    private fun del(replaceMode: Boolean): Boolean {
+    private fun del(): Boolean {
         val startSelection = selectionStart
         val endSelection = selectionEnd
         if(startSelection == endSelection) {
@@ -174,7 +141,7 @@ class FixedHexInputEditText : AbstractHexInputField {
                 val backwardIterator = editableText.backwardIterator(startSelection)
                 while (backwardIterator.hasNext()) {
                     if(backwardIterator.next().isHexDigit()) {
-                        delChar(replaceMode, backwardIterator.position)
+                        delChar(backwardIterator.position)
                         setSelection(backwardIterator.position)
                         return true
                     }
@@ -185,7 +152,7 @@ class FixedHexInputEditText : AbstractHexInputField {
             val backwardIterator = editableText.backwardIterator(endSelection)
             while (backwardIterator.hasNext()) {
                 val isValuable = backwardIterator.next().isHexDigit()
-                if(isValuable) delChar(replaceMode, backwardIterator.position)
+                if(isValuable) delChar(backwardIterator.position)
                 if(backwardIterator.position == startSelection) {
                     setSelection(startSelection)
                     return true
@@ -196,46 +163,37 @@ class FixedHexInputEditText : AbstractHexInputField {
         return true
     }
 
-    private fun delChar(replaceMode: Boolean, position: Int) {
-        if(replaceMode) editableText.replace(position, position + 1, "0")
-        else editableText.delete(position, position + 1)
-    }
+    private fun delChar(position: Int) = editableText.delete(position, position + 1)
 
     //----------------------------------------------------------------------------------------------
     // Watching text
     //----------------------------------------------------------------------------------------------
-    inner class HexTextWatcher constructor(private val mask: String) : TextWatcher {
+    inner class HexTextWatcher : TextWatcher {
 
         private var lock = false
         private var moveToPosition: Int? = null
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            if(!lock) {
-                if (count > after) moveToPosition = start
-                if (count + 1 < after) moveToPosition = -1
-            }
-        }
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
 
         override fun afterTextChanged(s: Editable) {
             if (lock) return
             lock = true
+
             val iterator = s.forwardIterator()
             val sb = StringBuilder()
-            for (maskChar in mask) {
-                if (maskChar.isValuable()) {
-                    if (iterator.hasNext())
-                        while (iterator.hasNext()) {
-                            val userInput = iterator.next()
-                            if (userInput.isHexDigit()) {
-                                sb.append(userInput.toPlaceholderCase(maskChar))
-                                break
-                            } else continue
-                        }
-                    else sb.append('0')
-                } else sb.append(maskChar)
-            }
+
+            if (iterator.hasNext())
+                while (iterator.hasNext()) {
+                    val userInput = iterator.next()
+                    if (userInput.isHexDigit()) {
+                        sb.append(userInput.toUpperCase())
+                    } else {
+                        continue
+                    }
+                }
+
             s.replace(0, s.length, sb.toString())
             val endSelection: Int = selectionEnd
 
@@ -265,11 +223,5 @@ class FixedHexInputEditText : AbstractHexInputField {
     //----------------------------------------------------------------------------------------------
     // HexInputField impl
     //----------------------------------------------------------------------------------------------
-    override fun resetMask(mask: String) {
-        super.removeTextChangedListener(hexTextWatcher)
-        attributes.mask = mask
-        hexTextWatcher = HexTextWatcher(attributes.mask)
-        super.addTextChangedListener(hexTextWatcher)
-        setSelection(0)
-    }
+    override fun resetMask(mask: String) = Unit
 }

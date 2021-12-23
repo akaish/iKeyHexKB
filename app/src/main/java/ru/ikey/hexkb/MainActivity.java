@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import net.akaish.ikey.hkb.ArbitraryHexInputEditText;
 import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
 import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.simple_2_text) FixedHexInputEditText simpleText2;
     @BindView(R.id.simple_3_text) FixedHexInputEditText simpleText3;
     @BindView(R.id.simple_4_text) FixedHexInputEditText simpleText4;
+    @BindView(R.id.simple_5_text) ArbitraryHexInputEditText simpleText5;
     private static final String LINK_PATTERN = "<a href=\"{0}\">{1}</a>";
 
     @BindString(R.string.about_app_text) String aboutAppText;
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         hexKeyboard.registerInput(simpleText3);
         simpleText3.setOnFocusChangeListener((v, onFocused) -> Log.e("134", "AFTER"));
         hexKeyboard.registerInput(simpleText4);
+        hexKeyboard.registerInput(simpleText5);
 
         hexKeyboard.registerInput(dallasKeyCodeET);
         dallasKeyCodeET.setPostProcessor( editable -> {

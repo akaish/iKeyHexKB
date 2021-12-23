@@ -23,5 +23,12 @@
  */
 package net.akaish.ikey.hkb
 
-interface KeyboardSpan
-interface HexInputField
+interface HexInputField {
+
+    val fieldId: Long
+
+    fun setAssetsFont(fontPath: String?)
+    fun resetMask(mask: String)
+    fun setDecorator(decorator: Util.FixedHexDecorator)
+    fun setPostProcessor(postProcessor: Util.FixedHexPostProcessor)
+}

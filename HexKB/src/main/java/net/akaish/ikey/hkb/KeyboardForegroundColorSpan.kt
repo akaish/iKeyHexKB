@@ -28,5 +28,7 @@ import android.text.style.ForegroundColorSpan
 
 class KeyboardForegroundColorSpan: ForegroundColorSpan, KeyboardSpan {
     constructor(color: Int) : super(color)
+
+    @Suppress("Unused")
     constructor(color: Parcel) : super(color)
 }

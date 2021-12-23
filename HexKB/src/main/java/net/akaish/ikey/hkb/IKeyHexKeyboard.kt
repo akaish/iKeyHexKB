@@ -41,8 +41,12 @@ import android.widget.EditText
 import androidx.core.util.set
 import androidx.core.util.size
 
-class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView, private val containerView: View?,
-                      hideKeyboardParam: HideKeyboard?, showKeyboardParam: ShowKeyboard?, private val onSendButton: OnSendButton?) {
+class IKeyHexKeyboard(val host: Activity,
+                      private val keyboardView: KeyboardView,
+                      private val containerView: View?,
+                      hideKeyboardParam: HideKeyboard?,
+                      showKeyboardParam: ShowKeyboard?,
+                      private val onSendButton: OnSendButton?) {
 
     companion object {
         const val CODE_DELETE = -5
@@ -72,11 +76,16 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
 
     private var isVisible = false
     private var isEnabled = true
-    private val registeredInputs = LongSparseArray<FixedHexInputEditText>()
+    private val registeredInputs = LongSparseArray<AbstractHexInputField>()
     private var currentInputField: Long? = null
 
+    @Suppress("Unused")
     fun enable() { isEnabled = true }
+
+    @Suppress("Unused")
     fun disable() { isEnabled = false }
+
+    @Suppress("Unused")
     fun isEnabled() = isEnabled
 
     private val keyboardActionListener = object : KeyboardView.OnKeyboardActionListener {
@@ -139,12 +148,8 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         keyboardView.setOnKeyboardActionListener(keyboardActionListener)
     }
 
+    @Suppress("Unused")
     fun isStateVisible() = state.isVisible()
-
-    private fun hideKeyboard() {
-        isVisible = hideKeyboard.hideKeyboard()
-        currentInputField = -1
-    }
 
     private fun showKeyboard(v: View) {
         if(!isEnabled) return
@@ -163,18 +168,19 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         } else false
     }
 
+    @Suppress("Unused")
     fun registerInputs(vararg editTexts: EditText) {
         for(input in editTexts) registerInput(input)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "ObsoleteSdkInt")
     fun registerInput(editText: EditText) {
-        check(editText is FixedHexInputEditText) { "Provided text input is not instance of FixedHexInputEditText!" }
+        check(editText is AbstractHexInputField) { "Provided text input is not instance of AbstractHexInputField!" }
 
         editText.setOnFocusChangeListenerWrapper(View.OnFocusChangeListener { v, hasFocus ->
             if (!isEnabled) return@OnFocusChangeListener
             if (hasFocus) {
-                showKeyboard(v).also { currentInputField = (v as FixedHexInputEditText).fieldId }
+                showKeyboard(v).also { currentInputField = (v as AbstractHexInputField).fieldId }
             } else hideKeyboard
         })
 
@@ -201,8 +207,9 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         editText.setInputType(editText.getInputType() or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
     }
 
+    @Suppress("Unused")
     fun unregisterInput(editText: EditText) {
-        if(editText is FixedHexInputEditText) {
+        if(editText is AbstractHexInputField) {
             registeredInputs[editText.fieldId]?.let {
                 it.setOnFocusChangeListenerWrapper(null)
                 it.setOnClickListenerWrapper(null)
@@ -211,27 +218,21 @@ class IKeyHexKeyboard(val host: Activity, private val keyboardView: KeyboardView
         }
     }
 
+    @Suppress("Unused")
     fun unregisterAllInputs() {
         for(i in 0 until registeredInputs.size) unregisterInput(registeredInputs.valueAt(i))
     }
 
+    @Suppress("Unused")
     class Builder {
-        lateinit var host: Activity
-            private set
-        var keyboardViewId: Int = -1
-            private set
-        var containerViewId: Int = -1
-            private set
-        var hideKeyboard: HideKeyboard? = null
-            private set
-        var showKeyboard: ShowKeyboard? = null
-            private set
-        var onSendButton: OnSendButton? = null
-
-        var containerView: View? = null
-            private set
-        var keyboardView: KeyboardView? = null
-            private set
+        private lateinit var host: Activity
+        private var keyboardViewId: Int = -1
+        private var containerViewId: Int = -1
+        private var hideKeyboard: HideKeyboard? = null
+        private var showKeyboard: ShowKeyboard? = null
+        private var onSendButton: OnSendButton? = null
+        private var containerView: View? = null
+        private var keyboardView: KeyboardView? = null
 
         fun withHost(activity: Activity) = apply { host = activity }
         fun withKeyboardViewId(id: Int) = apply { keyboardViewId = id }
