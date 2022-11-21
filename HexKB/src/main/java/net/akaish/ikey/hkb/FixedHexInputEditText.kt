@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2021 iKey (ikey.ru)
+ *  Copyright (c) 2019-2022 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,9 +28,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_00
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_CLEAR
 
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_DELETE
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_END
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_FF
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_HOME
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_LEFT
 import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
@@ -107,6 +110,20 @@ class FixedHexInputEditText : AbstractHexInputField {
                 }
                 CODE_END -> {
                     setSelection(editableText.length)
+                    true
+                }
+                CODE_CLEAR -> {
+                    text = null
+                    true
+                }
+                CODE_00 -> {
+                    type(attributes.isReplaceMode,48)
+                    type(attributes.isReplaceMode,48)
+                    true
+                }
+                CODE_FF -> {
+                    type(attributes.isReplaceMode,70)
+                    type(attributes.isReplaceMode,70)
                     true
                 }
                 else -> type(attributes.isReplaceMode, keyCode)

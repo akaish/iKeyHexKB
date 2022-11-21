@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2021 iKey (ikey.ru)
+ *  Copyright (c) 2019-2022 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,6 +56,9 @@ class IKeyHexKeyboard(val host: Activity,
         const val CODE_RIGHT = 55003
         const val CODE_END = 55004
         private const val CODE_DONE = 55005 // Don't remember code for done, using code done instead
+        const val CODE_00 = -101
+        const val CODE_FF = -102
+        const val CODE_CLEAR = -103
 
     }
 
@@ -142,7 +145,8 @@ class IKeyHexKeyboard(val host: Activity,
         }
         host.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
-        if (onSendButton == null) keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_pad) else keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_send_pad)
+        // TODO STYLING
+        if (onSendButton == null) keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_modern_pad) else keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_send_pad)
         keyboardView.isPreviewEnabled = false
 
         keyboardView.setOnKeyboardActionListener(keyboardActionListener)

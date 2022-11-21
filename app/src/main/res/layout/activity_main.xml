@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019-2021 iKey (ikey.ru)
+  ~ Copyright (c) 2019-2022 iKey (ikey.ru)
   ~ Author: Denis Bogomolov (akaish)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -382,9 +382,9 @@
     <RelativeLayout
         android:id="@+id/ikey_main_hex_kb_container"
         android:layout_width="match_parent"
-        android:layout_height="216dip"
+        android:layout_height="222dip"
         android:layout_alignParentBottom="true"
-        android:background="#272727"
+        android:background="#f0f0f0"
         android:visibility="gone">
 
         <android.inputmethodservice.KeyboardView
@@ -393,9 +393,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="#272727"
+            android:background="#f0f0f0"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:keyBackground="@drawable/modern_button"
             android:visibility="gone" />
 
     </RelativeLayout>

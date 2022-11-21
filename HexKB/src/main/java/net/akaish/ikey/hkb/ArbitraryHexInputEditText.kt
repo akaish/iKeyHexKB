@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2021 iKey (ikey.ru)
+ *  Copyright (c) 2019-2022 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,14 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_00
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_CLEAR
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_DELETE
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_END
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_FF
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_HOME
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_LEFT
+import net.akaish.ikey.hkb.IKeyHexKeyboard.Companion.CODE_RIGHT
 import net.akaish.ikey.hkb.Util.Companion.backwardIterator
 import net.akaish.ikey.hkb.Util.Companion.forwardIterator
 import net.akaish.ikey.hkb.Util.Companion.hexOnly
@@ -84,24 +92,38 @@ class ArbitraryHexInputEditText : AbstractHexInputField {
             }
         } ?: run {
             return when (keyCode) {
-                IKeyHexKeyboard.CODE_DELETE -> del()
-                IKeyHexKeyboard.CODE_LEFT -> {
+                CODE_DELETE -> del()
+                CODE_LEFT -> {
                     if(selectionStart > 0)
                         setSelection(selectionStart - 1)
                     true
                 }
-                IKeyHexKeyboard.CODE_RIGHT -> {
+                CODE_RIGHT -> {
                     if(selectionStart < editableText.length) {
                         setSelection(1 + selectionStart)
                     }
                     true
                 }
-                IKeyHexKeyboard.CODE_HOME -> {
+                CODE_HOME -> {
                     setSelection(0)
                     true
                 }
-                IKeyHexKeyboard.CODE_END -> {
+                CODE_END -> {
                     setSelection(editableText.length)
+                    true
+                }
+                CODE_CLEAR -> {
+                    text = null
+                    true
+                }
+                CODE_00 -> {
+                    type(48)
+                    type(48)
+                    true
+                }
+                CODE_FF -> {
+                    type(70)
+                    type(70)
                     true
                 }
                 else -> type(keyCode)
