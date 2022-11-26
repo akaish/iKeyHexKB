@@ -25,8 +25,8 @@ package net.akaish.ikey.hkb
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.inputmethodservice.Keyboard
-import android.inputmethodservice.KeyboardView
+import com.android.inputmethodservice.Keyboard
+import com.android.inputmethodservice.KeyboardView
 import android.os.Build
 import android.text.InputType
 import android.util.Log
@@ -40,13 +40,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.util.set
 import androidx.core.util.size
+import net.akaish.ikey.hkb.Util.Companion.dpToPx
+import net.akaish.ikey.hkb.theme.ITheme
 
 class IKeyHexKeyboard(val host: Activity,
                       private val keyboardView: KeyboardView,
                       private val containerView: View?,
                       hideKeyboardParam: HideKeyboard?,
                       showKeyboardParam: ShowKeyboard?,
-                      private val onSendButton: OnSendButton?) {
+                      private val onSendButton: OnSendButton?,
+                      theme: ITheme? = null) {
 
     companion object {
         const val CODE_DELETE = -5
@@ -112,10 +115,10 @@ class IKeyHexKeyboard(val host: Activity,
 
         }
 
-        override fun onText(text: CharSequence?) = Unit
+        //override fun onText(text: CharSequence?) = Unit
         override fun swipeRight() = Unit
-        override fun onPress(primaryCode: Int) = Unit
-        override fun onRelease(primaryCode: Int) = Unit
+        //override fun onPress(primaryCode: Int) = Unit
+        //override fun onRelease(primaryCode: Int) = Unit
         override fun swipeLeft() = Unit
         override fun swipeUp() = Unit
         override fun swipeDown() = Unit
@@ -145,8 +148,28 @@ class IKeyHexKeyboard(val host: Activity,
         }
         host.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
-        // TODO STYLING
-        if (onSendButton == null) keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_modern_pad) else keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_send_pad)
+        if(theme == null) {
+            if (onSendButton == null) {
+                keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_pad)
+            } else {
+                keyboardView.keyboard = Keyboard(host, R.xml.hex_keyboard_send_pad)
+            }
+        } else {
+            if (onSendButton == null) {
+                keyboardView.keyboard = Keyboard(host, theme.xmlPadResource())
+            } else {
+                val sendEnabledPad = theme.xmlSendEnabledPadResource()
+                require(sendEnabledPad != null)
+                keyboardView.keyboard = Keyboard(host, sendEnabledPad)
+            }
+            containerView?.setBackgroundColor(theme.backgroundColor())
+            keyboardView.setBackgroundColor(theme.backgroundColor())
+
+            val clp = containerView?.layoutParams
+            clp?.height = dpToPx(host, theme.containerSizeDp)
+            containerView?.layoutParams = clp
+        }
+
         keyboardView.isPreviewEnabled = false
 
         keyboardView.setOnKeyboardActionListener(keyboardActionListener)
@@ -237,6 +260,7 @@ class IKeyHexKeyboard(val host: Activity,
         private var onSendButton: OnSendButton? = null
         private var containerView: View? = null
         private var keyboardView: KeyboardView? = null
+        private var theme: ITheme? = null
 
         fun withHost(activity: Activity) = apply { host = activity }
         fun withKeyboardViewId(id: Int) = apply { keyboardViewId = id }
@@ -246,12 +270,13 @@ class IKeyHexKeyboard(val host: Activity,
         fun withHideKeyboard(hideKeyboard: HideKeyboard?) = apply { this.hideKeyboard = hideKeyboard }
         fun withShowKeyboard(showKeyboard: ShowKeyboard?) = apply { this.showKeyboard = showKeyboard }
         fun withOnSendButton(onSendButton: OnSendButton?) = apply { this.onSendButton = onSendButton }
+        fun withTheme(theme: ITheme?) = apply { this.theme = theme }
 
         fun build(): IKeyHexKeyboard {
             if(keyboardView == null) keyboardView = host.findViewById(keyboardViewId)
             if(containerView == null)
                 containerView = if(containerViewId > 0) host.findViewById(containerViewId) else null
-            return IKeyHexKeyboard(host, keyboardView!!, containerView, hideKeyboard, showKeyboard, onSendButton)
+            return IKeyHexKeyboard(host, keyboardView!!, containerView, hideKeyboard, showKeyboard, onSendButton, theme)
         }
     }
 }

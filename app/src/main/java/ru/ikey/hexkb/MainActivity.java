@@ -25,6 +25,7 @@ package ru.ikey.hexkb;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -44,6 +47,8 @@ import net.akaish.ikey.hkb.ArbitraryHexInputEditText;
 import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
 import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
+import net.akaish.ikey.hkb.theme.ITheme;
+import net.akaish.ikey.hkb.theme.ModernTheme;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -56,6 +61,8 @@ import butterknife.OnCheckedChanged;
 import ru.ikey.hexkb.ds.CRC8Dallas;
 
 import static java.text.MessageFormat.format;
+
+import com.android.inputmethodservice.KeyboardView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,12 +88,33 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     protected IKeyHexKeyboard hexKeyboard = null;
 
-    void initHKB() {
+    void initHKB(View rootView) {
+
+        ITheme theme = new ModernTheme(this);
+        KeyboardView keyboardView = new KeyboardView(this, theme.getAttributes());
+        RelativeLayout container = rootView.findViewById(R.id.ikey_main_hex_kb_container);
+        container.removeAllViews();
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        keyboardView.setFocusable(true);
+        keyboardView.setFocusableInTouchMode(true);
+        keyboardView.setVisibility(View.GONE);
+
+        keyboardView.setLayoutParams(layoutParams);
+
+
+        container.addView(keyboardView);
+
         hexKeyboard = null;
         hexKeyboard = new IKeyHexKeyboard.Builder()
                 .withHost(this)
-                .withKeyboardViewId(R.id.ikey_main_hex_kb)
-                .withContainerViewId(R.id.ikey_main_hex_kb_container)
+                .withKeyboardView(keyboardView)
+                .withContainerView(container)
+                .withTheme(theme)
                 .build();
     }
 
@@ -113,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         dallasKeyCodeET.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-        initHKB();
+        initHKB(findViewById(R.id.main_view));
 
         hexKeyboard.registerInput(simpleText1);
 

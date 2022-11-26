@@ -18,10 +18,10 @@
 ~ This file is a part of Android Hex Keyboard, more info at
 ~ https://ikey.ru
 -->
-<Keyboard
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="14%p"
-    android:keyHeight="54dip" >
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="14%p"
+    app:keyHeight="54dip">
 
     <!-- | 7  || 8  || 9  |  | A  || B  || C  | -->
     <!-- | 4  || 5  || 6  |  | D  || E  || F  | -->
@@ -30,46 +30,46 @@
 
     <!-- | 7  || 8  || 9  |  | A  || B  || C  | -->
     <Row>
-        <Key android:codes="55"    android:keyLabel="7" android:keyEdgeFlags="left" android:isRepeatable="true"/>
-        <Key android:codes="56"    android:keyLabel="8" android:isRepeatable="true"/>
-        <Key android:codes="57"    android:keyLabel="9" android:isRepeatable="true"/>
+        <Key app:codes="55"    app:keyLabel="7" app:keyEdgeFlags="left" app:isRepeatable="true"/>
+        <Key app:codes="56"    app:keyLabel="8" app:isRepeatable="true"/>
+        <Key app:codes="57"    app:keyLabel="9" app:isRepeatable="true"/>
 
-        <Key android:codes="65" android:keyLabel="A" android:isRepeatable="true" android:horizontalGap="10%p" />
-        <Key android:codes="66" android:keyLabel="B" android:isRepeatable="true"  />
-        <Key android:codes="67" android:keyLabel="C" android:isRepeatable="true"  />
+        <Key app:codes="65" app:keyLabel="A" app:isRepeatable="true" app:horizontalGap="10%p" />
+        <Key app:codes="66" app:keyLabel="B" app:isRepeatable="true"  />
+        <Key app:codes="67" app:keyLabel="C" app:isRepeatable="true"  />
     </Row>
 
     <!-- | 4  || 5  || 6  |  | D  || E  || F  | -->
     <Row>
-        <Key android:codes="52"    android:keyLabel="4" android:keyEdgeFlags="left" android:isRepeatable="true"/>
-        <Key android:codes="53"    android:keyLabel="5" android:isRepeatable="true"/>
-        <Key android:codes="54"    android:keyLabel="6" android:isRepeatable="true"/>
+        <Key app:codes="52"    app:keyLabel="4" app:keyEdgeFlags="left" app:isRepeatable="true"/>
+        <Key app:codes="53"    app:keyLabel="5" app:isRepeatable="true"/>
+        <Key app:codes="54"    app:keyLabel="6" app:isRepeatable="true"/>
 
-        <Key android:codes="68" android:keyLabel="D" android:isRepeatable="true" android:horizontalGap="10%p" />
-        <Key android:codes="69" android:keyLabel="E" android:isRepeatable="true"  />
-        <Key android:codes="70" android:keyLabel="F" android:isRepeatable="true"  />
+        <Key app:codes="68" app:keyLabel="D" app:isRepeatable="true" app:horizontalGap="10%p" />
+        <Key app:codes="69" app:keyLabel="E" app:isRepeatable="true"  />
+        <Key app:codes="70" app:keyLabel="F" app:isRepeatable="true"  />
     </Row>
 
     <!-- | 1  || 2  || 3  |  | <  || >  || ENT| -->
     <Row>
-        <Key android:codes="49"    android:keyLabel="1" android:keyEdgeFlags="left" android:isRepeatable="true"  />
-        <Key android:codes="50"    android:keyLabel="2" android:isRepeatable="true"  />
-        <Key android:codes="51"    android:keyLabel="3" android:isRepeatable="true"  />
+        <Key app:codes="49"    app:keyLabel="1" app:keyEdgeFlags="left" app:isRepeatable="true"  />
+        <Key app:codes="50"    app:keyLabel="2" app:isRepeatable="true"  />
+        <Key app:codes="51"    app:keyLabel="3" app:isRepeatable="true"  />
 
-        <Key android:codes="55002" android:keyLabel="&#8592;" android:isRepeatable="true" android:horizontalGap="10%p" />
-        <Key android:codes="55003" android:keyLabel="&#8594;" android:isRepeatable="true" />
-        <Key android:codes="55005" android:keyLabel="&#8629;" android:isRepeatable="true" />
+        <Key app:codes="55002" app:keyLabel="&#8592;" app:isRepeatable="true" app:horizontalGap="10%p" />
+        <Key app:codes="55003" app:keyLabel="&#8594;" app:isRepeatable="true" />
+        <Key app:codes="55005" app:keyLabel="&#8629;" app:isRepeatable="true" />
     </Row>
 
     <!-- | 00 || 0  || FF |  | DEL|| CLR|| HID| -->
     <Row>
-        <Key android:codes="-101"    android:keyLabel="00" android:keyEdgeFlags="left" android:isRepeatable="true"/>
-        <Key android:codes="48"    android:keyLabel="0" android:isRepeatable="true"/>
-        <Key android:codes="-102"    android:keyLabel="FF" android:isRepeatable="true"/>
+        <Key app:codes="-101"    app:keyLabel="00" app:keyEdgeFlags="left" app:isRepeatable="true"/>
+        <Key app:codes="48"    app:keyLabel="0" app:isRepeatable="true"/>
+        <Key app:codes="-102"    app:keyLabel="FF" app:isRepeatable="true"/>
 
-        <Key android:codes="-5" android:keyLabel="&#8656;" android:isRepeatable="true" android:horizontalGap="10%p" />
-        <Key android:codes="-103" android:keyLabel="✖" android:isRepeatable="true"  />
-        <Key android:codes="-3" android:keyLabel="▼" android:isRepeatable="true"  />
+        <Key app:codes="-5" app:keyLabel="&#8656;" app:isRepeatable="true" app:horizontalGap="10%p" />
+        <Key app:codes="-103" app:keyLabel="✖" app:isRepeatable="true"  />
+        <Key app:codes="-3" app:keyLabel="▼" app:isRepeatable="true"  />
     </Row>
 
 </Keyboard>

@@ -14,6 +14,8 @@ package com.android.inputmethodservice;
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ *
+ * This class contains some modifications for HexKB library.
  */
 import android.content.Context;
 import android.content.res.Resources;
@@ -56,10 +58,6 @@ import java.util.StringTokenizer;
  * @attr ref android.R.styleable#Keyboard_keyHeight
  * @attr ref android.R.styleable#Keyboard_horizontalGap
  * @attr ref android.R.styleable#Keyboard_verticalGap
- * @deprecated This class is deprecated because this is just a convenient UI widget class that
- *             application developers can re-implement on top of existing public APIs.  If you have
- *             already depended on this class, consider copying the implementation from AOSP into
- *             your project or re-implementing a similar widget by yourselves
  */
 public class Keyboard {
     static final String TAG = "Keyboard";
@@ -585,7 +583,7 @@ public class Keyboard {
             mKeys.add(key);
             row.mKeys.add(key);
             if (x > mTotalWidth) {
-                mTotalWidth = x;
+               mTotalWidth = x;
             }
         }
         mTotalHeight = y + mDefaultHeight;

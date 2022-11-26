@@ -18,4 +18,8 @@
 ~ https://ikey.ru
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.akaish.ikey.hkb" />
+    package="net.akaish.ikey.hkb">
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+</manifest>

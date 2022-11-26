@@ -14,19 +14,25 @@ package com.android.inputmethodservice;
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ *
+ * This class contains some modifications for HexKB library.
  */
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.graphics.drawable.Drawable;
 import com.android.inputmethodservice.Keyboard.Key;
+
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
@@ -39,6 +45,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import net.akaish.ikey.hkb.R;
 
@@ -201,9 +209,79 @@ public class KeyboardView extends View implements View.OnClickListener {
 
         }
     };
+
     public KeyboardView(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.keyboardViewStyle);
     }
+
+    public KeyboardView(Context context, @Nullable KeyboardViewAttributes attributes) {
+        super(context, null, 0);
+        LayoutInflater inflate =
+                (LayoutInflater) context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        int previewLayout = 0;
+        int keyTextSize = 0;
+
+        // Defaults
+        if(attributes == null) {
+            mKeyBackground = context.getResources().getDrawable(R.drawable.btn_keyboard_key);
+            mVerticalCorrection = 0;
+            previewLayout = 0;
+            mPreviewOffset = 0;
+            mPreviewHeight = 80;
+            mKeyTextSize = 60;
+            mKeyTextColor = Color.parseColor("#FFFFFF");
+            mLabelTextSize = 14;
+            mPopupLayout = 0;
+        } else {
+            mKeyBackground = attributes.getKeyBackground();
+            mVerticalCorrection = attributes.getVerticalCorrectionPx();
+            previewLayout = attributes.getPreviewLayout();
+            mPreviewOffset = attributes.getPreviewOffsetPx();
+            mPreviewHeight = attributes.getPreviewHeightPx();
+            mKeyTextSize = attributes.getKeyTextSizePx();
+            mKeyTextColor = attributes.getKeyTextColor();
+            mLabelTextSize = attributes.getLabelTextSizePx();
+            mPopupLayout = attributes.getPopupLayout();
+        }
+
+        // Get the settings preferences
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        mVibrateOn = sp.getBoolean(PREF_VIBRATE_ON, mVibrateOn);
+        mSoundOn = sp.getBoolean(PREF_SOUND_ON, mSoundOn);
+        mProximityCorrectOn = sp.getBoolean(PREF_PROXIMITY_CORRECTION, true);
+
+        mPreviewPopup = new PopupWindow(context);
+        if (previewLayout != 0) {
+            mPreviewText = (TextView) inflate.inflate(previewLayout, null);
+            mPreviewTextSizeLarge = (int) mPreviewText.getTextSize();
+            mPreviewPopup.setContentView(mPreviewText);
+            mPreviewPopup.setBackgroundDrawable(null);
+        } else {
+            mShowPreview = false;
+        }
+
+        mPreviewPopup.setTouchable(false);
+
+        mPopupKeyboard = new PopupWindow(context);
+        mPopupKeyboard.setBackgroundDrawable(null);
+        //mPopupKeyboard.setClippingEnabled(false);
+
+        mPopupParent = this;
+        //mPredicting = true;
+
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setTextSize(keyTextSize);
+        mPaint.setTextAlign(Align.CENTER);
+        mPadding = new Rect(0, 0, 0, 0);
+        mMiniKeyboardCache = new HashMap<Key,View>();
+        mKeyBackground.getPadding(mPadding);
+
+        resetMultiTap();
+        initGestureDetector();
+    }
+
     public KeyboardView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypedArray a =
@@ -215,6 +293,17 @@ public class KeyboardView extends View implements View.OnClickListener {
         int previewLayout = 0;
         int keyTextSize = 0;
         int n = a.getIndexCount();
+
+        // Defaults
+        mKeyBackground = context.getResources().getDrawable(R.drawable.btn_keyboard_key);
+        mVerticalCorrection = 0;
+        previewLayout = 0;
+        mPreviewOffset = 0;
+        mPreviewHeight = 80;
+        mKeyTextSize = 60;
+        mKeyTextColor = Color.parseColor("#FFFFFF");
+        mLabelTextSize = 14;
+        mPopupLayout = 0;
 
         for (int i = 0; i < n; i++) {
             int attr = a.getIndex(i);
@@ -539,9 +628,13 @@ public class KeyboardView extends View implements View.OnClickListener {
             return;
         }
         if (mVibrator == null) {
-            mVibrator = new Vibrator();
+            mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         }
-        mVibrator.vibrate(mVibratePattern, -1);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mVibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            mVibrator.vibrate(mVibratePattern, -1);
+        }
     }
     private int getKeyIndices(int x, int y, int[] allKeys) {
         final List<Key> keys = mKeyboard.getKeys();
@@ -692,7 +785,7 @@ public class KeyboardView extends View implements View.OnClickListener {
                 previewPopup.setWidth(popupWidth);
                 previewPopup.setHeight(popupHeight);
                 if (!mPreviewCentered) {
-                    mPopupPreviewX = key.x - mPreviewText.getPaddingLeft() + mPaddingLeft;
+                    mPopupPreviewX = key.x - mPreviewText.getPaddingLeft() + getPaddingLeft();
                     mPopupPreviewY = key.y - popupHeight + mPreviewOffset;
                 } else {
                     // TODO: Fix this if centering is brought back
@@ -727,8 +820,8 @@ public class KeyboardView extends View implements View.OnClickListener {
             return;
         }
         final Key key = mKeyboard.getKeys().get(keyIndex);
-        invalidate(key.x + mPaddingLeft, key.y + mPaddingTop,
-                key.x + key.width + mPaddingLeft, key.y + key.height + mPaddingTop);
+        invalidate(key.x + getPaddingLeft(), key.y + getPaddingTop(),
+                key.x + key.width + getPaddingLeft(), key.y + key.height + getPaddingTop());
     }
     private boolean openPopupIfRequired(MotionEvent me) {
         // Check if we have a popup layout specified first.
@@ -753,6 +846,7 @@ public class KeyboardView extends View implements View.OnClickListener {
      * @return true if the long press is handled, false otherwise. Subclasses should call the
      * method on the base class if the subclass doesn't wish to handle the call.
      */
+    // HexKB: We do not support this and would not implement it right now
     protected boolean onLongPress(Key popupKey) {
         int popupKeyboardId = popupKey.popupResId;
         if (popupKeyboardId != 0) {
@@ -800,8 +894,8 @@ public class KeyboardView extends View implements View.OnClickListener {
                 mWindowOffset = new int[2];
                 getLocationInWindow(mWindowOffset);
             }
-            mPopupX = popupKey.x + mPaddingLeft;
-            mPopupY = popupKey.y + mPaddingTop;
+            mPopupX = popupKey.x + getPaddingLeft();
+            mPopupY = popupKey.y + getPaddingTop();
             mPopupX = mPopupX + popupKey.width - mMiniKeyboardContainer.getMeasuredWidth();
             mPopupY = mPopupY - mMiniKeyboardContainer.getMeasuredHeight();
             final int x = mPopupX + mMiniKeyboardContainer.getPaddingRight() + mWindowOffset[0];
@@ -822,8 +916,8 @@ public class KeyboardView extends View implements View.OnClickListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent me) {
-        int touchX = (int) me.getX() - mPaddingLeft;
-        int touchY = (int) me.getY() + mVerticalCorrection - mPaddingTop;
+        int touchX = (int) me.getX() - getPaddingLeft();
+        int touchY = (int) me.getY() + mVerticalCorrection - getPaddingTop();
         int action = me.getAction();
         long eventTime = me.getEventTime();
         int keyIndex = getKeyIndices(touchX, touchY, null);

@@ -20,6 +20,7 @@
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -382,21 +383,21 @@
     <RelativeLayout
         android:id="@+id/ikey_main_hex_kb_container"
         android:layout_width="match_parent"
-        android:layout_height="222dip"
+        android:layout_height="216dp"
         android:layout_alignParentBottom="true"
-        android:background="#f0f0f0"
+        android:animateLayoutChanges="true"
+        android:background="#272727"
         android:visibility="gone">
 
-        <android.inputmethodservice.KeyboardView
+        <com.android.inputmethodservice.KeyboardView
             android:id="@+id/ikey_main_hex_kb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="#f0f0f0"
+            android:background="#272727"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:keyBackground="@drawable/modern_button"
             android:visibility="gone" />
 
     </RelativeLayout>

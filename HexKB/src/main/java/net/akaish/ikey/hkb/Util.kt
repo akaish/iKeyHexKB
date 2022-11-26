@@ -26,7 +26,9 @@ package net.akaish.ikey.hkb
 import android.content.Context
 import android.text.Editable
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import java.lang.IllegalArgumentException
+import kotlin.math.roundToInt
 
 class Util {
 
@@ -92,6 +94,17 @@ class Util {
                 else -> throw IllegalArgumentException("FixedHexInputEditText unknown value ($behaviorString) for attr parameter keyBehaviour (only null, insert and replace allowed)!")
             }
             return Attributes(assetsFontPath, mask, behavior, fillMode)
+        }
+
+        fun dpToPx(ctx: Context, dp: Int): Int {
+            val displayMetrics = ctx.resources.displayMetrics
+            return (dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
+        }
+
+        @Suppress("Unused")
+        fun pxToDp(ctx: Context, px: Int): Int {
+            val displayMetrics = ctx.resources.displayMetrics
+            return (px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
         }
     }
 
