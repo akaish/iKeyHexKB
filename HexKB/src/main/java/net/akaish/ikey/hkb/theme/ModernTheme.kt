@@ -18,5 +18,5 @@ class ModernTheme(context: Context) : ITheme {
 
     override fun backgroundColor(): Int = Color.parseColor("#f0f0f0")
 
-    override val containerSizeDp: Int = 226
+    override val containerSizeDp: Int = 268
 }

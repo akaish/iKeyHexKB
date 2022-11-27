@@ -18,5 +18,5 @@ class ClassicTheme(context: Context) : ITheme {
 
     override fun backgroundColor(): Int = Color.parseColor("#272727")
 
-    override val containerSizeDp: Int = 216
+    override val containerSizeDp: Int = 260
 }

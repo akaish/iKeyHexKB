@@ -47,6 +47,7 @@ import net.akaish.ikey.hkb.ArbitraryHexInputEditText;
 import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
 import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
+import net.akaish.ikey.hkb.theme.ClassicTheme;
 import net.akaish.ikey.hkb.theme.ITheme;
 import net.akaish.ikey.hkb.theme.ModernTheme;
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     void initHKB(View rootView) {
 
-        ITheme theme = new ModernTheme(this);
+        ITheme theme = new ClassicTheme(this);
         KeyboardView keyboardView = new KeyboardView(this, theme.getAttributes());
         RelativeLayout container = rootView.findViewById(R.id.ikey_main_hex_kb_container);
         container.removeAllViews();
