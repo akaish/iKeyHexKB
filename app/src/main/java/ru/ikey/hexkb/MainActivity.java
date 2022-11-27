@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     void initHKB(View rootView) {
 
-        ITheme theme = new ClassicTheme(this);
+        ITheme theme = new ModernTheme(this);
         KeyboardView keyboardView = new KeyboardView(this, theme.getAttributes());
         RelativeLayout container = rootView.findViewById(R.id.ikey_main_hex_kb_container);
         container.removeAllViews();
