@@ -114,6 +114,7 @@ class ArbitraryHexInputEditText : AbstractHexInputField {
                 }
                 CODE_CLEAR -> {
                     text = null
+                    setSelection(0)
                     true
                 }
                 CODE_00 -> {
