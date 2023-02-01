@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019-2022 iKey (ikey.ru)
+  ~ Copyright (c) 2019-2023 iKey (ikey.ru)
   ~ Author: Denis Bogomolov (akaish)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -371,6 +371,52 @@
                         android:text="@string/example_1_5_init"
                         android:textSize="14sp"
                         app:assetsFont="fonts/clmwts.ttf"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- (5) Usual text field: -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:text="@string/example_6_label"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/colorPrimary" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/simple_6_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/example_1_6_hint"
+                        android:inputType="textNoSuggestions"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="14sp"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 

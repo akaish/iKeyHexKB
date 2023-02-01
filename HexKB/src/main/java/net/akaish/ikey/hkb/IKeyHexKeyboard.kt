@@ -1,7 +1,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019-2022 iKey (ikey.ru)
+ *  Copyright (c) 2019-2023 iKey (ikey.ru)
  *  Author: Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,8 @@ import android.app.Activity
 import com.android.inputmethodservice.Keyboard
 import com.android.inputmethodservice.KeyboardView
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
 import android.util.Log
 import android.util.LongSparseArray
@@ -200,6 +202,12 @@ class IKeyHexKeyboard(val host: Activity,
         for(input in editTexts) registerInput(input)
     }
 
+    private val closeKeyboardTask = Runnable {
+        hideKeyboard.hideKeyboard()
+    }
+    private val closeKeyboardTaskHandler = Handler(Looper.getMainLooper())
+    private val closeKeyboardDelay = 200L
+
     @SuppressLint("ClickableViewAccessibility", "ObsoleteSdkInt")
     fun registerInput(editText: EditText) {
         check(editText is AbstractHexInputField) { "Provided text input is not instance of AbstractHexInputField!" }
@@ -207,8 +215,11 @@ class IKeyHexKeyboard(val host: Activity,
         editText.setOnFocusChangeListenerWrapper(View.OnFocusChangeListener { v, hasFocus ->
             if (!isEnabled) return@OnFocusChangeListener
             if (hasFocus) {
+                closeKeyboardTaskHandler.removeCallbacks(closeKeyboardTask)
                 showKeyboard(v).also { currentInputField = (v as AbstractHexInputField).fieldId }
-            } else hideKeyboard
+            } else {
+                closeKeyboardTaskHandler.postDelayed(closeKeyboardTask, closeKeyboardDelay)
+            }
         })
 
         editText.setOnClickListenerWrapper( View.OnClickListener { v -> this.showKeyboard(v)})

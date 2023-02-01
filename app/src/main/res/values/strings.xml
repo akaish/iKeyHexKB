@@ -1,6 +1,6 @@
 <resources>
     <!--
-    ~ Copyright (c) 2019-2022 iKey (ikey.ru)
+    ~ Copyright (c) 2019-2023 iKey (ikey.ru)
     ~ Author: Denis Bogomolov (akaish)
     ~
     ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,9 @@
     ~ https://ikey.ru
     -->
 
-    <string name="app_name">iKey Hex KB Demo v0.5.9</string>
+    <string name="app_name">iKey Hex KB Demo v0.6.0</string>
 
-    <string name="about_app_text">This this Demo application for iKey Hex KB v0.5.9.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright © 2019–2022 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
+    <string name="about_app_text">This this Demo application for iKey Hex KB v0.6.0.\nThis application as well as iKey Hex KB licensed under Apache v.2 License. Copyright © 2019-2023 ikey.ru, author Denis Bogomolov (akaish), more info at {0}</string>
     <string name="about_app_link_text">iKeyHexKB project page.</string>
     <string name="about_app_link">https://github.com/akaish/iKeyHexKB</string>
 
@@ -44,5 +44,8 @@
 
     <string name="example_1_5_hint">No formatting, arbitrary length hex string</string>
     <string name="example_1_5_init">AABBCCDDEE</string>
-    <string name="example_5_label">(4) No formatting, arbitrary length hex string:</string>
+    <string name="example_5_label">(5) No formatting, arbitrary length hex string:</string>
+
+    <string name="example_1_6_hint">No formatting, generous input field</string>
+    <string name="example_6_label">(6) Usual input:</string>
 </resources>
