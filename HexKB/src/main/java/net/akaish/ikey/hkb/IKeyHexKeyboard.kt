@@ -206,7 +206,7 @@ class IKeyHexKeyboard(val host: Activity,
         hideKeyboard.hideKeyboard()
     }
     private val closeKeyboardTaskHandler = Handler(Looper.getMainLooper())
-    private val closeKeyboardDelay = 200L
+    private val closeKeyboardDelay = 20L
 
     @SuppressLint("ClickableViewAccessibility", "ObsoleteSdkInt")
     fun registerInput(editText: EditText) {

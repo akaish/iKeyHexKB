@@ -8,7 +8,7 @@ See demo application for example code snippets.
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
 
-    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.6.0'
+    implementation 'net.akaish.ikey.hkb:ikey-hkb:0.6.1'
 }
 ```
 
