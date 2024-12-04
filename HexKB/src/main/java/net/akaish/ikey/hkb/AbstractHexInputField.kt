@@ -42,7 +42,7 @@ abstract class AbstractHexInputField : TextInputEditText, HexInputField {
     protected var decoratorInstance: Util.FixedHexDecorator? = null
 
     constructor(context: Context) : super(context) {
-        attributes = Util.Attributes(null, Util.defaultMask, Util.defaultKeyBehavior, false)
+        attributes = Util.Attributes(null, Util.DEFAULT_MASK, Util.DEFAULT_KEY_BEHAVIOUR, false)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {

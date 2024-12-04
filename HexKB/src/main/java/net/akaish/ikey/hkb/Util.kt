@@ -33,23 +33,26 @@ import kotlin.math.roundToInt
 class Util {
 
     companion object {
-        private const val placeholderCapital: Char = 'X'
-        private const val placeholder: Char = 'x'
+        private const val PLACEHOLDER_CAPITAL: Char = 'X'
+        private const val PLACEHOLDER: Char = 'x'
         private val digits = "0123456789aAbBcCdDeEfF".toCharArray()
 
         const val REPLACE_KEY_BEHAVIOR = 1
-        @Suppress("Unused")
         const val INSERT_KEY_BEHAVIOUR = 2
-        const val defaultKeyBehavior = REPLACE_KEY_BEHAVIOR
+        const val DEFAULT_KEY_BEHAVIOUR = REPLACE_KEY_BEHAVIOR
 
-        const val defaultMask = "XX XX XX XX XX XX XX XX"
+        const val DEFAULT_MASK = "XX XX XX XX XX XX XX XX"
+        private const val NULLABLE_PLACEHOLDER = 'n'
+        private const val NULLABLE_PLACEHOLDER_CAPITAL = 'N'
+        const val NULL = '_'
 
-
-        fun Char.isValuable() = this == placeholderCapital || this == placeholder
+        fun Char.isValuable() = this == PLACEHOLDER_CAPITAL || this == PLACEHOLDER
 
         fun Char.isHexDigit() = this in digits
 
         fun Char.toPlaceholderCase(placeholder: Char) = if(placeholder.isUpperCase()) this.toUpperCase() else this.toLowerCase()
+
+        fun Char.isNullableValuable() = this == NULLABLE_PLACEHOLDER || this == NULLABLE_PLACEHOLDER_CAPITAL
 
         fun String.hexOnly(): String {
             val sb = StringBuilder()
@@ -61,9 +64,9 @@ class Util {
         //------------------------------------------------------------------------------------------
         // Editable extensions
         //------------------------------------------------------------------------------------------
-        fun Editable.forwardIterator(startFrom: Int = 0) = ForwardEditableIterator(this, startFrom)
+        fun CharSequence.forwardIterator(startFrom: Int = 0) = ForwardEditableIterator(this, startFrom)
 
-        fun Editable.backwardIterator(startFrom: Int = this.length) = BackwardEditableIterator(this, startFrom)
+        fun CharSequence.backwardIterator(startFrom: Int = this.length) = BackwardEditableIterator(this, startFrom)
 
         //------------------------------------------------------------------------------------------
         // Attributes parsing
@@ -85,12 +88,12 @@ class Util {
                 }
             }
             typedArray.recycle()
-            if(mask == null) mask = defaultMask
+            if(mask == null) mask = DEFAULT_MASK
             behavior = when(behaviorString) {
                 "insert" -> INSERT_KEY_BEHAVIOUR
                 "replace" -> REPLACE_KEY_BEHAVIOR
-                "null" -> defaultKeyBehavior
-                null -> defaultKeyBehavior
+                "null" -> DEFAULT_KEY_BEHAVIOUR
+                null -> DEFAULT_KEY_BEHAVIOUR
                 else -> throw IllegalArgumentException("FixedHexInputEditText unknown value ($behaviorString) for attr parameter keyBehaviour (only null, insert and replace allowed)!")
             }
             return Attributes(assetsFontPath, mask, behavior, fillMode)
@@ -108,7 +111,7 @@ class Util {
         }
     }
 
-    class BackwardEditableIterator(private val editable: Editable, var position: Int = editable.length): Iterator<Char> {
+    class BackwardEditableIterator(private val editable: CharSequence, var position: Int = editable.length): Iterator<Char> {
 
         override fun hasNext() = position > 0
 
@@ -118,7 +121,7 @@ class Util {
         }
     }
 
-    class ForwardEditableIterator(private val editable: Editable, var position: Int = 0): Iterator<Char> {
+    class ForwardEditableIterator(private val editable: CharSequence, var position: Int = 0): Iterator<Char> {
 
         override fun hasNext() = editable.length > position
 
@@ -145,5 +148,14 @@ class Util {
 
     interface FixedHexDecorator {
         fun decorate(source: Editable)
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Interface to notify about nullable hie
+    //----------------------------------------------------------------------------------------------
+    interface DataNotifier {
+        fun left()
+        fun right()
+        fun onDataSizeChanged(diffSize: Int, diff: String)
     }
 }

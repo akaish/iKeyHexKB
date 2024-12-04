@@ -25,9 +25,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:layout_above="@+id/ikey_main_hex_kb_container">
 
         <LinearLayout
@@ -74,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <net.akaish.ikey.hkb.FixedHexInputEditText
+                    <net.akaish.ikey.hkb.NullableHexInputEditText
                         android:id="@+id/simple_1_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -86,7 +95,7 @@
                         android:textSize="14sp"
                         app:assetsFont="fonts/clmwts.ttf"
                         app:keyBehaviour="insert"
-                        app:mask="XX:XX-XX-XX-XX"
+                        app:mask="NN NN NN NN NN NN NN NN"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 

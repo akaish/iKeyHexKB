@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_marginHorizontal="2dp"
+    android:layout_height="24dp">
+
+    <TextView
+        android:id="@+id/hkb_line_index"
+        android:layout_width="40dp"
+        android:textSize="14sp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_height="wrap_content"
+        />
+
+    <net.akaish.ikey.hkb.NullableHexInputEditText
+        android:id="@+id/hkb_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textNoSuggestions|text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:background="@null"
+        app:assetsFont="fonts/clmwts.ttf"
+        app:keyBehaviour="insert"
+        app:mask="NN NN NN NN NN NN NN NN"
+        />
+
+</LinearLayout>

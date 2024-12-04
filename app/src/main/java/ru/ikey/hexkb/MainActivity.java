@@ -42,11 +42,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import net.akaish.ikey.hkb.ArbitraryHexInputEditText;
 import net.akaish.ikey.hkb.FixedHexInputEditText;
 import net.akaish.ikey.hkb.IKeyHexKeyboard;
 import net.akaish.ikey.hkb.KeyboardForegroundColorSpan;
+import net.akaish.ikey.hkb.NullableHexInputEditText;
 import net.akaish.ikey.hkb.theme.ClassicTheme;
 import net.akaish.ikey.hkb.theme.ITheme;
 import net.akaish.ikey.hkb.theme.ModernTheme;
@@ -55,11 +57,10 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.util.Arrays;
 
-import butterknife.BindString;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import ru.ikey.hexkb.ds.CRC8Dallas;
+import ru.ikey.hexkb.rc.HexRecyclerEditor;
+import ru.ikey.hexkb.rc.LineAdapter;
 
 import static java.text.MessageFormat.format;
 
@@ -67,20 +68,8 @@ import com.android.inputmethodservice.KeyboardView;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.kf_dallas_crc_switch) Switch dallasCrcSwitch;
-    @BindView(R.id.kf_dallas_keycode_field) FixedHexInputEditText dallasKeyCodeET;
-    @BindView(R.id.simple_1_text) FixedHexInputEditText simpleText1;
-    @BindView(R.id.simple_2_text) FixedHexInputEditText simpleText2;
-    @BindView(R.id.simple_3_text) FixedHexInputEditText simpleText3;
-    @BindView(R.id.simple_4_text) FixedHexInputEditText simpleText4;
-    @BindView(R.id.simple_5_text) ArbitraryHexInputEditText simpleText5;
+
     private static final String LINK_PATTERN = "<a href=\"{0}\">{1}</a>";
-
-    @BindString(R.string.about_app_text) String aboutAppText;
-    @BindString(R.string.about_app_link) String aboutAppLink;
-    @BindString(R.string.about_app_link_text) String aboutAppLinkText;
-
-    @BindView(R.id.appInfo) TextView aboutAppTV;
 
     private static final CRC8Dallas crc8Dallas = new CRC8Dallas(true);
 
@@ -124,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     @OnCheckedChanged(R.id.kf_dallas_crc_switch)
     void onDallasCRCSwitchChecked() {
-        if(dallasCrcSwitch.isChecked()) {
-            int selection = dallasKeyCodeET.getSelectionStart();
-            if(dallasKeyCodeET.getText() != null) {
-                dallasKeyCodeET.setText(dallasKeyCodeET.getText().toString().replace(" ", ""));
-                dallasKeyCodeET.setSelection(selection);
-            }
-        }
+//        if(dallasCrcSwitch.isChecked()) {
+//            int selection = dallasKeyCodeET.getSelectionStart();
+//            if(dallasKeyCodeET.getText() != null) {
+//                dallasKeyCodeET.setText(dallasKeyCodeET.getText().toString().replace(" ", ""));
+//                dallasKeyCodeET.setSelection(selection);
+//            }
+//        }
     }
 
     @Override
@@ -139,7 +128,17 @@ public class MainActivity extends AppCompatActivity {
         adjustFontScale( getResources().getConfiguration());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
+        Switch dallasCrcSwitch = findViewById(R.id.kf_dallas_crc_switch);
+        FixedHexInputEditText dallasKeyCodeET = findViewById(R.id.kf_dallas_keycode_field);
+        NullableHexInputEditText simpleText1 = findViewById(R.id.simple_1_text);
+        FixedHexInputEditText simpleText2 = findViewById(R.id.simple_2_text);
+        FixedHexInputEditText simpleText3 = findViewById(R.id.simple_3_text);
+        FixedHexInputEditText simpleText4 = findViewById(R.id.simple_4_text);
+        ArbitraryHexInputEditText simpleText5 = findViewById(R.id.simple_5_text);
+        TextView aboutAppTV = findViewById(R.id.appInfo);
+        RecyclerView recycler = findViewById(R.id.list);
+
         dallasKeyCodeET.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         initHKB(findViewById(R.id.main_view));
@@ -188,6 +187,16 @@ public class MainActivity extends AppCompatActivity {
 
         aboutAppTV.setText(buildHTMLString());
         aboutAppTV.setMovementMethod(LinkMovementMethod.getInstance());
+
+        HexRecyclerEditor editor = new HexRecyclerEditor(recycler);
+        LineAdapter adapter = new LineAdapter(
+                this,
+                16,
+                16,
+                hexKeyboard,
+                editor
+        );
+        recycler.setAdapter(adapter);
     }
 
     @Override public void onBackPressed() {
@@ -199,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
     // About app
     //----------------------------------------------------------------------------------------------
     private Spanned buildHTMLString() {
-        String link = format(LINK_PATTERN, aboutAppLink, aboutAppLinkText);
-        String html = format(aboutAppText, link);
+        String link = format(LINK_PATTERN, getString(R.string.about_app_link), getString(R.string.about_app_link_text));
+        String html = format(getString(R.string.about_app_text), link);
         return fromHtml(html);
     }
 
